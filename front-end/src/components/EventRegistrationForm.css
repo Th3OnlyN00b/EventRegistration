@@ -1,9 +1,9 @@
-.base::-webkit-scrollbar{
+.base::-webkit-scrollbar {
     display: none;
 }
 
-a{
-    color:#ff0099;
+a {
+    color: #ff0099;
 }
 
 .form-container-container {
@@ -24,7 +24,7 @@ a{
     color: #fff;
 }
 
-.base::-webkit-scrollbar{
+.base::-webkit-scrollbar {
     background: #000000;
     display: none;
 }
@@ -53,29 +53,39 @@ a{
     box-sizing: border-box;
 }
 
-.select-field:disabled{
-    pointer-events:fill;
+.select-field:disabled {
+    pointer-events: fill;
 }
 
 .input-field:not(:focus):not(:placeholder-shown):invalid {
     border: 2px solid red
 }
 
-div ul li{
+div ul li {
     margin-top: 10px;
 }
 
-ul li ul li{
+ul li ul li {
     margin-top: 3px;
     font-size: 12px;
 }
 
-ul li ol li{
+ul li ol li {
     margin-top: 3px;
     font-size: 12px;
 }
 
-strong{
+li:target {
+    animation: highlight 3s;
+}
+
+@keyframes highlight {
+    from {
+        background-color: rgb(255, 255, 216, 0.185);
+    }
+}
+
+strong {
     font-size: 2.2ex;
 }
 
@@ -84,12 +94,18 @@ strong{
     /* Set the desired height */
     resize: none;
     /* Allow vertical resizing */
-}::-webkit-scrollbar{
+}
+
+::-webkit-scrollbar {
     background: #242424;
-}::-webkit-scrollbar-thumb{
+}
+
+::-webkit-scrollbar-thumb {
     background: #575757;
     -webkit-border-radius: 2ex;
-}::-webkit-scrollbar-thumb:hover{
+}
+
+::-webkit-scrollbar-thumb:hover {
     background: #494949;
     -webkit-border-radius: 2ex;
 }
@@ -147,6 +163,7 @@ strong{
     transition: transform .3s;
     transform: scale(var(--scale, 1)) translateZ(0);
     animation: var(--name, unchecked) var(--duration) ease forwards;
+
     &:before,
     &:after {
         content: '';
@@ -158,18 +175,22 @@ strong{
         background: var(--background, var(--secondary));
         animation: var(--name-icon-b, var(--name-icon, unchecked-icon)) var(--duration) ease forwards;
     }
+
     &:before {
         clip-path: polygon(0 6px, 6px 6px, 6px 0, 10px 0, 10px 6px, 16px 6px, 16px 10px, 10px 10px, 10px 16px, 6px 16px, 6px 10px, 0 10px);
     }
+
     &:after {
         --height: 4px;
         --top: 12px;
         --background: var(--primary);
         --name-icon-b: var(--name-icon-a, checked-icon);
     }
+
     &:active {
         --scale: .95;
     }
+
     &:checked {
         --name: checked;
         --name-icon-b: checked-icon;
@@ -181,6 +202,7 @@ strong{
     from {
         transform: translateZ(12px);
     }
+
     to {
         transform: translateX(16px) rotateY(90deg) translateZ(12px);
     }
@@ -190,6 +212,7 @@ strong{
     from {
         transform: translateX(-16px) rotateY(-90deg) translateZ(12px);
     }
+
     to {
         transform: translateZ(12px);
     }
@@ -200,6 +223,7 @@ strong{
         background-image: radial-gradient(ellipse at center, var(--secondary) 0%, var(--secondary) 25%, var(--primary) 25.1%, var(--primary) 100%);
         background-position: 100% 50%;
     }
+
     to {
         background-image: radial-gradient(ellipse at center, var(--secondary) 0%, var(--secondary) 25%, var(--primary) 25.1%, var(--primary) 100%);
         background-position: 50% 50%;
@@ -211,6 +235,7 @@ strong{
         background-image: radial-gradient(ellipse at center, var(--primary) 0%, var(--primary) 25%, var(--secondary) 25.1%, var(--secondary) 100%);
         background-position: 100% 50%;
     }
+
     to {
         background-image: radial-gradient(ellipse at center, var(--primary) 0%, var(--primary) 25%, var(--secondary) 25.1%, var(--secondary) 100%);
         background-position: 50% 50%;
@@ -218,9 +243,12 @@ strong{
 }
 
 table {
-    width: 100%; /* Optional */
+    width: 100%;
+    /* Optional */
 }
 
-tbody td, thead th {
-    width: 20%;  /* Optional */
+tbody td,
+thead th {
+    width: 20%;
+    /* Optional */
 }

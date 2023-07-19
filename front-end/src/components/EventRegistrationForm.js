@@ -310,7 +310,7 @@ class EventRegistrationForm extends Component {
                 </li>
               </ol>
             </li>
-            <li>
+            <li id='RageCage'>
               <strong>Rage Cage (2 Players, Group Event)</strong><br/>
               This is a group event. This means that all teams will play simultaniously. There will be three rounds, 
               the rules for which are as follows:
@@ -368,47 +368,177 @@ class EventRegistrationForm extends Component {
               </p>
             </li>
             <li>
-              <strong>Example Event 4</strong><br/>
+              <strong>Slap Cup (2 Players, Group Event)</strong><br/>
+              The rules are nearly identical to <a href='#RageCage'>Rage Cage</a>'s rules, but with a few changes:
+              <ol>
+                <li>
+                  Instead of stacking a player, you will slap their cup off the table
+                </li>
+                <li>
+                  Instead of passing your cup to the player on the left (after slapping), you will pass it to anyone in the circle
+                </li>
+              </ol>
+            </li>
+            <li>
+              <strong>Kings (2 Players, Group Event)</strong><br/>
+              King's cup is a simple but fun game.
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                Every player must have a cup with their team's beverage in it. It must be filled completely.
+                There will be a deck of cards, shuffled and placed face-down in a circle around an unopened can of a
+                non-alcoholic beverage. The starting player will be chosen the same way they are in <a href='#RageCage'>
+                Rage Cage</a>.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                On their turn, the player will draw a card from the circle. If they break the circle through this action,
+                they must drink. They must then announce what the card is, then perform its action. The actions for each
+                card are listed below:
+                <ul>
+                  <li>
+                    <strong>Ace: Waterfall</strong><br/>
+                    All players start drinking. The player who drew the card may stop at any time. All other players may
+                    only stop once the player to their right stops. However, they do not have to stop until their cup is
+                    empty. If a player in the middle of a chain runs out of their beverage, the player who would normally stop
+                    from them instead stops based on the person to their right. As an example, given the following arrangement:<br/>
+                    ←E←D←C←<br/>
+                    where person A (not shown) drew the card, if person D runs out of their beverage then person E is now
+                    reliant on person C:<br/>
+                    ←E←C←<br/>
+                    and play continues with player D sitting out the rest of the waterfall round
+                  </li>
+                  <li>
+                    <strong>Two: You</strong><br/>
+                    The player who drew the card chooses someone else to drink.
+                  </li>
+                  <li>
+                    <strong>Three: Me</strong><br/>
+                    The player who drew the card drinks.
+                  </li>
+                  <li>
+                    <strong>Four: Floor</strong><br/>
+                    Everyone points towards the floor. Last one to do so drinks.
+                  </li>
+                  <li>
+                    <strong>Five: Guys</strong><br/>
+                    Anyone who identifies as male drinks. Non-binary people may choose to drink on fives or sixes before the game.
+                  </li>
+                  <li>
+                    <strong>Six: Chicks</strong><br/>
+                    Anyone who identifies as female drinks. Non-binary people may choose to drink on fives or sixes before the game.
+                  </li>
+                  <li>
+                    <strong>Seven: Heaven</strong><br/>
+                    Everyone points towards the sky (up). Last one to do so drinks.
+                  </li>
+                  <li>
+                    <strong>Eight: Mate</strong><br/>
+                    The player who drew the card chooses someone to become their mate. For the rest of the game, whenever one of
+                    the members of the mate drinks, the other does as well (except Aces). Polyamory is allowed, and all members
+                    of the polycule drink if any one of them does.
+                  </li>
+                  <li>
+                    <strong>Nine: Rhyme</strong><br/>
+                    The player who drew the card says a word. All players following (going left) must come up with a unique rhyme
+                    with that word. Any repeats or failures to come up with a word in five seconds result in a failure. The failure
+                    drinks.
+                  </li>
+                  <li>
+                    <strong>Ten: Categories</strong><br/>
+                    The player who drew the card says a word. All players following (going left) must come up with a unique item
+                    in that category. Any repeats or failures to come up with a word in five seconds result in a failure. The failure
+                    drinks.
+                  </li>
+                  <li>
+                    <strong>Jack: Never Have I Ever</strong><br/>
+                    All players hold up three or more fingers, starting with three and adding one for each Jack drawn over the course
+                    of the game. The player who drew the card goes first, stating something they have not done. Anyone who has done
+                    that action puts a finger down. If no one puts a finger down, the asker puts their finger down. Play continues 
+                    with the person to the asker's left asking the next question. Once one person runs out of fingers, they drink and
+                    the game is over. If multiple people run out of fingers on the same turn, they all drink.
+                  </li>
+                  <li>
+                    <strong>Queen: Question Master</strong><br/>
+                    From the time the player reveals they drew a queen until either the end of the game or the revelation of the next
+                    queen, the player who drew the queen is the question master. Anyone who answers the question master's questions,
+                    no matter how short or small, drinks. There is no fucking the question master, Carl. 
+                  </li>
+                  <li>
+                    <strong>King: Make a Rule</strong><br/>
+                    The player who drew the card creates a rule. The rule may not single out any one person or group of people (either 
+                    intentionally or otherwise) but may apply to any status in the game (such as mates or question masters). The player
+                    may also revoke a rule made by another player instead of making their own rule. This rule lasts until the end of the
+                    game. 
+                  </li>
+                  <li>
+                    <strong>Joker: Fuck You, Drink</strong><br/>
+                    The player who drew the card points to someone and says "fuck you, drink". That player must drink. 
+                  </li>
+                </ul>
+                After they have performed the action for their card, they must insert the card between the can tab and the
+                can. If the can either cracks (loses pressure) or cards fall out, the player loses, their team is ejected
+                from the game, and they are ineligible for a medal. The can is replaced and play continues. Once all the
+                cards in the circle are gone, the game is over. 
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                With the exception of Aces, every time a player drinks their team gains a point. The team with the least
+                number of points at the end of the game wins.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                <ul>
+                  <li>
+                    With a Joker, you can make non-playing players drink anyways. This does not apply to a two.
+                  </li>
+                  <li>
+                    A King's rule may target things like "players with their legs crossed" or other changable statuses. They
+                    may not target unchangable statuses such as gender, race, name, age, etc.
+                  </li>
+                  <li>
+                    If only one player has performed the action called out in the Jack's "Never Have I Ever", they may (but
+                    do not have to) share the story.
+                  </li>
+                  <li>
+                    The can may be checked for pressure by gently squeezing. 
+                  </li>
+                </ul>
+              </p>
+            </li>
+            <li>
+              <strong>Pizza box</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 5</strong><br/>
+              <strong>Flip cup</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 6</strong><br/>
+              <strong>quarters</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 7</strong><br/>
+              <strong>Snappa (if we have space?)</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 8</strong><br/>
+              <strong>Marshmallow tower</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 9</strong><br/>
+              <strong>Cheese ball toss</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 10</strong><br/>
+              <strong>Russian roulette</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 11</strong><br/>
+              <strong>Ice luge</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
             <li>
-              <strong>Example Event 12</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
-            </li>
-            <li>
-              <strong>Example Event 13</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
-            </li>
-            <li>
-              <strong>Example Event 14</strong><br/>
+              <strong>Lipstictionary</strong><br/>
               This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
             </li>
           </ul>
