@@ -323,14 +323,49 @@ class EventRegistrationForm extends Component {
                 people between them. A non-player chooses a number between 0 and 1000, and shares that number with a non-player of a different
                 team. All players guess at the number, the closest player and the person directly across from them will begin play.
               </p>
-              <p style={{paddingLeft: '10px', fontSize: '12px'}}><strong style={{fontSize: 16}}>Setup</strong><br/>
-              Take an approximately random number of cups, at least 25 but no more than 50. Place them in the center of a
-              standard table, and fill each with about 0.3-0.5 inches of one of alcohol. Choose one cup in the center of the cluster, 
-              and add a shot or more of hard alcohol to it. Ensure it does not get any additional soft alcohol. This cup will be the
-              "bitch cup". All players (2 from each team) will stand around the table, where all teammates must have at least two other
-              people between them. A non-player chooses a number between 0 and 1000, and shares that number with a non-player of a different
-              team. All players guess at the number, the closest player and the person directly across from them will begin play.</p>
-
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                The starting players will take a cup from the center, drink it's contents, place the cup on the table, then attempt to
+                bounce their pingpong ball off the table and into the cup in front of them. Once this is complete, they must pass the cup
+                (with the ball still in it) to the left. If the player gets the ball in the cup on the first attempt, they may pass the
+                cup (with ball) to anyone except the person with the other cup. If they choose to pass left and the person to their left
+                already has a cup, the player may "stack" the player to their left by placing their cup (and ball) inside of their cup.
+                The stacked player must pass their stack to the left, take a new cup from the center, and drink it. If the stacked player
+                is on team non-alcohol, they must pour the contents of the new cup into the aforementioned bitch cup. The stacked player
+                must place the empty cup on the table, and attempt to get their ball into their new cup. Using this methodology, only
+                two stacks should ever be in play, and there should always be two stacks in play. The bitch cup should be the last cup
+                consumed.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                Every time a player stacks another player, their team gets a point. If a player is forced to drink the bitch cup, their
+                team is eliminated, their team's score is set to zero, neither player from that team will compete in any more rounds,
+                and their team is not eligible for a medal from this game. Due to this, you'll want to try to stack people as much as
+                you can, but be wary as the number of cups in the center dwindles. The three teams with the highest scores at the end
+                of three rounds will recieve gold, silver, and bronze respectively.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                <ul>
+                  <li>
+                    If the ball bounces off the table into one of the cups in the center, that player must
+                    consume its contents, add it to their stack, and continue play. If they get it into the
+                    bitch cup, the round is over, the team's score is set to zero, and the team is eliminated.
+                  </li>
+                  <li>
+                    If your ball bounces into your opponent's cup, the opponent may count that as getting their
+                    ball in and pass their stack left. You must still attempt your stack.
+                  </li>
+                  <li>
+                    If a ball falls on the floor, no attempt may be made to block the player from picking it up.
+                    However, no attempt to help them is required either. 
+                  </li>
+                  <li>
+                    If a player is stacked while attempting to retrieve their ball, play pauses until they retrieve
+                    it and pass their stack left.
+                  </li>
+                </ul>
+              </p>
             </li>
             <li>
               <strong>Example Event 4</strong><br/>
