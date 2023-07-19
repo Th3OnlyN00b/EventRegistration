@@ -53,8 +53,30 @@ a{
     box-sizing: border-box;
 }
 
+.select-field:disabled{
+    pointer-events:fill;
+}
+
 .input-field:not(:focus):not(:placeholder-shown):invalid {
     border: 2px solid red
+}
+
+div ul li{
+    margin-top: 10px;
+}
+
+ul li ul li{
+    margin-top: 3px;
+    font-size: 12px;
+}
+
+ul li ol li{
+    margin-top: 3px;
+    font-size: 12px;
+}
+
+strong{
+    font-size: 2.2ex;
 }
 
 .textarea-field {

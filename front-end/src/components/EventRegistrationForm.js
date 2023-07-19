@@ -188,7 +188,7 @@ class EventRegistrationForm extends Component {
                   disabled={!this.state.rsvp}
                   required
                 >
-                  <option key="" value="" disabled>-- Select Team --</option>
+                  <option key="" value="" disabled>{!this.state.rsvp ? "Please RSVP before selecting your team" : "-- Select Team --"}</option>
                   {
                     this.state.teams
                   }
@@ -262,16 +262,75 @@ class EventRegistrationForm extends Component {
           <h2>The events:</h2>
           <ul>
             <li>
-              <strong>Example Event 1</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              <strong>Beer Pong (2 Players)</strong><br/>
+              It's beer pong. We'll be using <a href='https://ponguniversity.com/beer-pong-rules/'>Pong University's
+              ruleset</a> with two exceptions: 
+              <ol style={{marginBottom: '5px'}}>
+                <li>Anyone may chose both the fingering and blowing technique regardless of gender.</li>
+                <li>Each team will get 1 (one) reconfiguration of the opponent's cups, allowing for the following formations:
+                  <ul>
+                    <li>Zipper: Five cups in a zig-zag formation front-to-back</li>
+                    <li>Diamond: Four cups in a diamond formation front-to-back</li>
+                    <li>Stoplight: Three cups in a line front-to-back</li>
+                    <li>Triangle: Three cups in a triangle formation with the nose pointing to the center of the table</li>
+                    <li>Side-by-side: Two cups in a line side-to-side</li>
+                    <li>Line: Two cups in a line front-to-back</li>
+                  </ul>
+                </li>
+              </ol>
+              Some items not covered in the ruleset:
+              <ul>
+                <li>If both team members get their balls in a cup, they may go again</li>
+                <li>If both team members get their balls in the same cup, they may choose a second cup to remove</li>
+                <li>Teammate shot order is not important and may be done at the same time</li>
+                <li>Despite my favorite house rule, we are using a more official ruleset. No recovering of balls</li>
+                <li>If you drop a ball off roof or lose it and cannot recover it, you lose a cup</li>
+              </ul>
             </li>
             <li>
-              <strong>Example Event 2</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              <strong>Beer Ball (2 Players)</strong><br/>
+              We will be using the <a href='https://drive.google.com/file/d/0B6MqRd13ejXWUmwwSjQtajdYWTQ/view?resourcekey=0-pPYDg48adzPjoFSFXbcMLw'>
+              American Beer Ball Association's rules</a> with the following changes:
+              <ol>
+                <li>
+                  We will not be using goblets, we will be using <a href='https://www.costco.com/kirkland-signature-chinet-18-oz-plastic-cup%2C-red%2C-240-count.product.100421211.html'>
+                  Kirkland Signature Red Cups</a> as with all other challenges
+                </li>
+                <li>
+                  We will be swapping the phrase "Ein Schuß" to "One Shot" as this is<span> </span>
+                  <span style={{fontFamily: 'monospace'}}>
+                    <span style={{color: 'red', backgroundColor: 'blue'}}>A</span>
+                    <span style={{color: 'white', backgroundColor: 'red'}}>M</span>
+                    <span style={{color: 'blue', backgroundColor: 'white'}}>E</span>
+                    <span style={{color: 'red', backgroundColor: 'blue'}}>R</span>
+                    <span style={{color: 'white', backgroundColor: 'red'}}>I</span>
+                    <span style={{color: 'blue', backgroundColor: 'white'}}>C</span>
+                    <span style={{color: 'red', backgroundColor: 'blue'}}>A</span>
+                  </span>
+                </li>
+              </ol>
             </li>
             <li>
-              <strong>Example Event 3</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              <strong>Rage Cage (2 Players, Group Event)</strong><br/>
+              This is a group event. This means that all teams will play simultaniously. There will be three rounds, 
+              the rules for which are as follows:
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                Take an approximately random number of cups, at least 25 but no more than 50. Place them in the center of a
+                standard table, and fill each with about 0.3-0.5 inches of one of alcohol. Choose one cup in the center of the cluster, 
+                and add a shot or more of hard alcohol to it. Ensure it does not get any additional soft alcohol. This cup will be the
+                "bitch cup". All players (2 from each team) will stand around the table, where all teammates must have at least two other
+                people between them. A non-player chooses a number between 0 and 1000, and shares that number with a non-player of a different
+                team. All players guess at the number, the closest player and the person directly across from them will begin play.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}><strong style={{fontSize: 16}}>Setup</strong><br/>
+              Take an approximately random number of cups, at least 25 but no more than 50. Place them in the center of a
+              standard table, and fill each with about 0.3-0.5 inches of one of alcohol. Choose one cup in the center of the cluster, 
+              and add a shot or more of hard alcohol to it. Ensure it does not get any additional soft alcohol. This cup will be the
+              "bitch cup". All players (2 from each team) will stand around the table, where all teammates must have at least two other
+              people between them. A non-player chooses a number between 0 and 1000, and shares that number with a non-player of a different
+              team. All players guess at the number, the closest player and the person directly across from them will begin play.</p>
+
             </li>
             <li>
               <strong>Example Event 4</strong><br/>
