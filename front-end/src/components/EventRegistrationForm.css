@@ -147,8 +147,10 @@ strong {
     --duration: .5s;
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: -webkit-radial-gradient(white, black);
     outline: none;
     cursor: pointer;
     position: relative;
