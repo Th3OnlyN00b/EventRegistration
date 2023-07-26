@@ -379,7 +379,7 @@ class EventRegistrationForm extends Component {
                 </li>
               </ol>
             </li>
-            <li>
+            <li id='KingsCup'>
               <strong>Kings (2 Players, Group Event)</strong><br/>
               King's cup is a simple but fun game.
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
@@ -506,16 +506,114 @@ class EventRegistrationForm extends Component {
               </p>
             </li>
             <li>
-              <strong>Pizza box</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              <strong>Pizza box (2 Players, Group Event)</strong><br/>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                There must be either a whiteboard or a titular <em>pizza box</em>, as well as whiteboard markers
+                or sharpies respectively. Either way, players will be drawing and writing, so there must be a 
+                comfortable amount of writing utensils to go around. There will also be a coin, initially handed
+                to the starting player. The starting player will be chosen using the same method described in other
+                games here, where two non-participating players from different teams think of a number between zero
+                and one thousand, and the player with the closest guess becomes the starting player. All players
+                will also need their own drink.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                Players will take turns flipping the coin onto the box (or whiteboard), starting with the player
+                initially holding the coin. If the coin goes off the box, the player gets a fault and simply tries
+                again. If they fail twice in a row, they drink and try again. This continues until the player either
+                gets the coin on the box, or dies trying. If the player dies trying, they are removed from the game
+                and play resumes with the next player in clockwise order. If the coin lands on the box, it will be
+                either inside of an existing shape, or it will not. There are two types of shapes:
+                <ol>
+                  <li>
+                    <strong>Name Shape:</strong><br/>
+                    Name shapes contain the name of a player. If a majority of the coin lands inside of a name shape,
+                    the named player must drink. If two players have the same name, they must both drink. 
+                  </li>
+                  <li>
+                    <strong>Rule Shapes:</strong><br/>
+                    All other shapes contain a rule. If a majority of the coin lands inside a rule shape, the throwing
+                    player must ensure that rule's execution. For example, if the rule dictates that they must dance
+                    in the style of a 1920's flapper, then they must do so. If they fail to complete this task, they
+                    must drink.
+                  </li>
+                </ol>
+                If a player's coin toss lands inside of an existing shape, they must execute that shape according to
+                the rules above. On the other hand, if a player's coin lands outside of an existing shape, they may
+                draw their own. Their first drawn shape must be a name shape, and must have a diameter of at least
+                two inches if at all possible. Otherwise, their shape must be a rule shape. The throwing player will
+                create a <em>unique</em> rule (one that is not already on the board) and draw a shape around the coin.
+                The shape may intersect other shapes, but may not overlap them. The rule created must follow the same
+                restrictions as in <a href='#KingsCup'>King's</a>, with the exception that they may target a
+                relationship status (single or not single). Watching situationships figure out if they should drink is
+                always entertaining.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                With the exception of Aces, every time a player drinks their team gains a point. The team with the least
+                number of points at the end of the game wins. Ties will be decided by a pushup contest.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                There shouldn't be any. Game is easy, get good.
+              </p>
             </li>
             <li>
-              <strong>Flip cup</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              <strong>Flip Cup (6 Players)</strong><br/>
+              We will be using <a 
+                href='https://images.squarespace-cdn.com/content/v1/5a3aa85990bade9f351061ab/1595203200662-FLFSW67TP0HDGHP31T7P/Flip+Cup+Rules.png?format=2500w'
+                target='_blank'
+                rel="noreferrer"
+              >
+                Chicken Shit's version of the rules
+              </a>, with no changes.
             </li>
             <li>
-              <strong>quarters</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              <strong>Quarters</strong><br/>
+              Quarters is another game that plays similar to Rage Cage, but it's also quite a bit different.
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                All players will start standing around a table. The two starting players, opposite each other,
+                will each need an empty cup and a single quarter. Players will also need to place a cup in the 
+                center of the table, which will be the "Penalty Cup". The Penalty Cup should be filled with
+                a single shot.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                If a player has a cup and a quarter in front of them, they must attempt to bounce the quarter 
+                flat side down off the table and into the cup. If they fail, they may try again. Once they make
+                it in the cup, they may pass the cup and quarter left. If the player to their left has a cup
+                already, they may "Screw" the player to their left by placing their cup inside of the left 
+                player's cup. The screwed player gets one single attempt for redemption and if they make it,
+                they may pass one cup left and the other to any other player. If they fail to make it, they 
+                must consume the drink in the Penalty Cup, refill it with the drink of their team, then they are
+                ejected from the game. Play resumes with the next player left and the player opposite them.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                The team the last player standing represents wins.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                <ul>
+                  <li>
+                    When the fourth-to-last person is eliminated, the cups start with the eliminator and the person to 
+                    their left. 
+                  </li>
+                  <li>
+                    A redeemer cannot give themselves the other cup, unless there are three or fewer players left.
+                  </li>
+                  <li>
+                    If at any point all the players remaining are on the same team, victory may be claimed then without
+                    finishing the game.
+                  </li>
+                  <li>
+                    This game does not involve biting. If you are under the impression that this game involves biting, 
+                    please contact the temporal anomalies department. 
+                  </li>
+                </ul>
+              </p>
             </li>
             <li>
               <strong>Snappa (if we have space?)</strong><br/>

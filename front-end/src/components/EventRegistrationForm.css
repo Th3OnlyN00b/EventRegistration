@@ -75,6 +75,13 @@ ul li ol li {
     font-size: 12px;
 }
 
+ul ol{
+    margin-bottom: 3px;
+}
+ul ul{
+    margin-bottom: 3px;
+}
+
 li:target {
     animation: highlight 3s;
 }
