@@ -617,27 +617,27 @@ class EventRegistrationForm extends Component {
             </li>
             <li>
               <strong>Snappa (if we have space?)</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
             <li>
               <strong>Marshmallow tower</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
             <li>
               <strong>Cheese ball toss</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
             <li>
               <strong>Russian roulette</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
             <li>
               <strong>Ice luge</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
             <li>
               <strong>Lipstictionary</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='google.com'>here</a>
+              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
           </ul>
         </Overlay>
