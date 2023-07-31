@@ -616,12 +616,13 @@ class EventRegistrationForm extends Component {
               </p>
             </li>
             <li>
-              <strong>Snappa (if we have space?)</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
-            </li>
-            <li>
-              <strong>Marshmallow tower</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
+              <strong>Marshmallow Tower</strong><br/>
+              For the architecturally inclined, we have a game for you too.
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                Each team will be given eighty (80) toothpicks, access to mini marshmallows, and twenty minutes. During
+                that time 
+              </p>
             </li>
             <li>
               <strong>Cheese ball toss</strong><br/>
