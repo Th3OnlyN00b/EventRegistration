@@ -263,8 +263,13 @@ class EventRegistrationForm extends Component {
           <ul>
             <li>
               <strong>Beer Pong (2 Players)</strong><br/>
-              It's beer pong. We'll be using <a href='https://ponguniversity.com/beer-pong-rules/'>Pong University's
-              ruleset</a> with two exceptions: 
+              It's beer pong. We'll be using <a 
+                href='https://ponguniversity.com/beer-pong-rules/'
+                target='_blank'
+                rel="noreferrer"
+              >
+                Pong University's ruleset
+              </a> with two exceptions: 
               <ol style={{marginBottom: '5px'}}>
                 <li>Anyone may chose both the fingering and blowing technique regardless of gender.</li>
                 <li>Each team will get 1 (one) reconfiguration of the opponent's cups, allowing for the following formations:
@@ -289,12 +294,19 @@ class EventRegistrationForm extends Component {
             </li>
             <li>
               <strong>Beer Ball (2 Players)</strong><br/>
-              We will be using the <a href='https://drive.google.com/file/d/0B6MqRd13ejXWUmwwSjQtajdYWTQ/view?resourcekey=0-pPYDg48adzPjoFSFXbcMLw'>
-              American Beer Ball Association's rules</a> with the following changes:
+              We will be using the <a href='https://drive.google.com/file/d/0B6MqRd13ejXWUmwwSjQtajdYWTQ/view?resourcekey=0-pPYDg48adzPjoFSFXbcMLw'
+                target='_blank'
+                rel="noreferrer"
+              >
+                American Beer Ball Association's rules</a> with the following changes:
               <ol>
                 <li>
-                  We will not be using goblets, we will be using <a href='https://www.costco.com/kirkland-signature-chinet-18-oz-plastic-cup%2C-red%2C-240-count.product.100421211.html'>
-                  Kirkland Signature Red Cups</a> as with all other challenges
+                  We will not be using goblets, we will be using <a href='https://www.costco.com/kirkland-signature-chinet-18-oz-plastic-cup%2C-red%2C-240-count.product.100421211.html'
+                    target='_blank'
+                    rel="noreferrer"
+                  >
+                    Kirkland Signature Red Cups
+                  </a> as with all other challenges
                 </li>
                 <li>
                   We will be swapping the phrase "Ein Schuß" to "One Shot" as this is<span> </span>
@@ -570,7 +582,7 @@ class EventRegistrationForm extends Component {
               </a>, with no changes.
             </li>
             <li>
-              <strong>Quarters</strong><br/>
+              <strong>Quarters (2 Players, Group Event)</strong><br/>
               Quarters is another game that plays similar to Rage Cage, but it's also quite a bit different.
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Setup</strong><br/>
@@ -616,29 +628,171 @@ class EventRegistrationForm extends Component {
               </p>
             </li>
             <li>
-              <strong>Marshmallow Tower</strong><br/>
+              <strong>Marshmallow Tower (3 Players, Group Event)</strong><br/>
               For the architecturally inclined, we have a game for you too.
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Setup</strong><br/>
-                Each team will be given eighty (80) toothpicks, access to mini marshmallows, and twenty minutes. During
-                that time 
+                Each team will be given eighty (80) toothpicks, access to mini marshmallows, and twenty (20) minutes. Each
+                player may claim a 4'x4' (1.2192 x 1.2192 meters, for our Canadian infiltrators) space on the ground.
+                This will be their working area. 
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                A neutral observer will start the timer and announce to all players that their time has begun. At this
+                point, each team will begin working on their tower, attempting to reach the highest heights possible
+                given the material restriction. Time warnings will be given at 10, 5, and 1 minutes left. At 30 seconds,
+                a neutral observer must begin a countdown, ending at zero. When the word zero is said, any player still
+                touching their tower is disqualified. If the tower falls over after zero, the player may still compete
+                with the tower at it's post-fall height.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                Two players from different teams will measure the heights of each tower using a tape measure. Once the
+                measurement is complete, it is locked in. If the tower falls over after the measurement has been recorded,
+                the original measurement is still used. We will be using freedom units, a.k.a inches, for this process.
+                Once all measurements have been recorded, the tallest structure wins.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                IDK m8, no questions from me dawg.
               </p>
             </li>
             <li>
-              <strong>Cheese ball toss</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
+              <strong>Cheese Ball Toss (2 Players)</strong><br/>
+              Have you ever played H.O.R.S.E? This will be very similar.
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                Each team will be given twenty (10) cheese balls. The two teams competing will first get their shoe
+                size, as the team with the larger shoe will go first. Teams will need to be in a moderately-sized open 
+                area. Each player must start with their own drink as well, but should not hold it during the game.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                The team with the larger shoe size will go first. They will set their players up in specific positions,
+                and one will attempt to throw a cheese ball into the mouth of the other. The other player may take any
+                action once the cheese ball has left the thrower's hand. The catching player must catch the cheese ball
+                in their mouth, without using their hands. If they do this, they get a point and the other team must then
+                attempt the same throw with their players in the same starting positions as the original team. After
+                this round, the second team will go first. If the first team does not make their attempt, the second team
+                may choose a new location. This pattern continues until both teams are out of balls. If at any point a team
+                misses their throw, they must take a drink.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                The team with the higher number of points wins. In the event there is a tie, the first team to finish both
+                of their drinks wins.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                <ul>
+                  <li>
+                    Players are allowed to start in one position then run to another as part of their toss. However, the
+                    other team must only start in the same position, and does not have to complete the toss the same way.
+                  </li>
+                  <li>
+                    Only one cheese ball may be tossed per turn. No do-overs.
+                  </li>
+                </ul>
+              </p>
             </li>
             <li>
-              <strong>Russian roulette</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
+              <strong>Russian Roulette (2 Players)</strong><br/>
+              The original Russian Roulette is a simple game. Load a six-barrel gun with a single bullet, spin the chamber,
+              hold it to your head, and pull the trigger. If you live, you win! If you die, you don't win. We will be playing
+              a less deadly form of the game still involving shots, but not from a gun.
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                For each round, A number of shots will be poured by a non-participant, with nobody watching. At least one,
+                but no more than half, will contain Kirkland Signature vodka (as to not support the Russian vodka economy).
+                The number of shots should be equivalent to the number of players still left in the game. Another
+                non-participant will collect the shots and place them in the center of the circle of players.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                Each round, the player who has most recently donated Ukraine will go first. They will select a shot and,
+                if not on team non-alcoholic, drink it in one go. If on team non-alcoholic, they may opt to simply sniff it,
+                then give it to a non-participating player of their choosing. All other players will then vote on if they
+                believe, based on the drinking player's reaction, that the player drank vodka. All correct guesses will gain
+                a point, incorrect will lose. Players do not have to vote. After the votes are in, the player will reveal and
+                points will be tallied. If the player's choice glass contained vodka and the majority of teams correctly guess
+                that they consumed vodka, the player's team loses two points. Is this fair mathmatically? No. Do I care? No.
+                Russian Roulette is a game of luck, be thankful I added skill at all.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                After three rounds, the team with the most points wins. In the event of a tie, play a special round with one
+                non-vodka and the rest vodka shots. The starting player is chosen the same way as a normal round. A 
+                representitive for each team will take/sniff the shots at the same time. The player who had water wins.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                <ul>
+                  <li>
+                    Players may vote on their own teammates.
+                  </li>
+                  <li>
+                    All players may take the sniff option if they don't want to drink.
+                  </li>
+                  <li>
+                    At any point, one player may force another player not on team non-alcoholic to play the original 
+                    Russian Roulette using a 6-shot nerf gun loaded with two darts. If the challenged player loses,
+                    they must take a shot. If they win, the challenging player must take a shot. They do not have to
+                    accept the challenge.  
+                  </li>
+                </ul>
+              </p>
             </li>
             <li>
               <strong>Ice luge</strong><br/>
               This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
             </li>
             <li>
-              <strong>Lipstictionary</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
+              <strong>Lipstictionary (6 players)</strong><br/>
+              Pictionary is a game where one player must wordlessly draw on a board to describe a specific word or phrase
+              so that their team may guess what they are drawing. We will be playing a slightly different version, where
+              the player have <s>lipstick</s> (actually, a whiteboard marker due to budget constraints) in their mouth and
+              be using that to draw. Good luck!
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Setup</strong><br/>
+                Teams will sit in a semi-circle with each team on one half. There will be a whiteboard on the wall, and each
+                team will be given a single whiteboard marker of a dark color. Each player will also need a cup with their
+                drink of choice.
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Play</strong><br/>
+                Teams will take turns. During a team's turn, they will nominate one player to be the artist. The artist will
+                be given a word by <a href='https://randomwordgenerator.com/pictionary.php'
+                  target='_blank'
+                  rel="noreferrer"
+                >
+                  this pictionary word generation website</a>, and 120 seconds to 
+                draw. The artist will draw, while their team guesses. For every incorrect guess a player makes, they must 
+                drink. A player may not make a new guess until they have finished drinking from the incorrect one. Once they
+                make the correct guess, their timer is stopped and their time recorded. Each team will take six turns, with
+                each player being the artist at least once. The artist may not speak during their turn, and may not write
+                words on the board either. 
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Winning</strong><br/>
+                After every player has taken their turn, the total times remaining from each team are summed and add
+              </p>
+              <p style={{paddingLeft: '10px', fontSize: '12px'}}>
+                <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
+                <ul>
+                  <li>
+                    Players may vote on their own teammates.
+                  </li>
+                  <li>
+                    All players may take the sniff option if they don't want to drink.
+                  </li>
+                  <li>
+                    At any point, one player may force another player not on team non-alcoholic to play the original 
+                    Russian Roulette using a 6-shot nerf gun loaded with two darts. If the challenged player loses,
+                    they must take a shot. If they win, the challenging player must take a shot. They do not have to
+                    accept the challenge.  
+                  </li>
+                </ul>
+              </p>
             </li>
           </ul>
         </Overlay>
