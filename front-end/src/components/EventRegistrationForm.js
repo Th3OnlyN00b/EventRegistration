@@ -744,7 +744,7 @@ class EventRegistrationForm extends Component {
             </li>
             <li>
               <strong>Ice luge</strong><br/>
-              This is an example event. It has rules and things that can be found <a href='https://google.com'>here</a>
+              Coming Soon!
             </li>
             <li>
               <strong>Lipstictionary (6 players)</strong><br/>
@@ -770,7 +770,7 @@ class EventRegistrationForm extends Component {
                 drink. A player may not make a new guess until they have finished drinking from the incorrect one. Once they
                 make the correct guess, their timer is stopped and their time recorded. Each team will take six turns, with
                 each player being the artist at least once. The artist may not speak during their turn, and may not write
-                words on the board either. 
+                words on the board either. They are allowed to use fingers to point and give thumbs up only.
               </p>
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Winning</strong><br/>
@@ -778,20 +778,7 @@ class EventRegistrationForm extends Component {
               </p>
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
-                <ul>
-                  <li>
-                    Players may vote on their own teammates.
-                  </li>
-                  <li>
-                    All players may take the sniff option if they don't want to drink.
-                  </li>
-                  <li>
-                    At any point, one player may force another player not on team non-alcoholic to play the original 
-                    Russian Roulette using a 6-shot nerf gun loaded with two darts. If the challenged player loses,
-                    they must take a shot. If they win, the challenging player must take a shot. They do not have to
-                    accept the challenge.  
-                  </li>
-                </ul>
+                None yet.
               </p>
             </li>
           </ul>
