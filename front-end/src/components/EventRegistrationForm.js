@@ -252,6 +252,15 @@ class EventRegistrationForm extends Component {
             <strong>Note:</strong> we do have a non-alcoholic team for those not drinking or designated 
             drivers. If that team fills up, I'll add another one. 
           </p>
+          <p style={{fontSize: 12}}>
+            <strong >Another note:</strong> Potentially accepting team requests. Please let me know. 
+          </p>
+          <p>
+            <strong style={{color: 'rgb(255, 108, 243)'}}>Where:</strong> TBD, please check this page the day before for a final location.
+          </p>
+          <p>
+            <strong style={{color: 'rgb(255, 108, 243)'}}>When:</strong> August 26th, starting at 1pm and going until the games are complete (probably around 7pm, but maybe faster)!
+          </p>
           <p>
             Teams consist of up to 6 players who will compete in some of the 14 events. Each player is
             required to compete in at least 2 events. Please remember this is for fun and not super competitive. 
