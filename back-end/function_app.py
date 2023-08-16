@@ -36,7 +36,7 @@ def addOrUpdate(req: func.HttpRequest) -> func.HttpResponse:
     req_json["phone"] = ''.join(list(filter(lambda x: x.isdigit(), str(req_json["phone"]))))[-10:]
     if len(req_json["phone"]) != 10:
         return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. That's not even a phone number.", status_code=403)
-    if req_json["team"] not in {str(i) for i in range(8)}:
+    if req_json["team"] not in {str(i) for i in range(10)}:
         return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. That's not even a valid team.", status_code=403)
     if len(req_json["name"]) < 1:
         return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. That's not even a real name.", status_code=403)
