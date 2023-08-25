@@ -4,9 +4,11 @@ import os
 import json
 from azure.cosmos import CosmosClient
 from azure.cosmos.exceptions import CosmosHttpResponseError
-from azure.identity import DefaultAzureCredential
+import utils
+from argon2 import PasswordHasher
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+
 @app.route(route="getAttendees")
 def getAttendees(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('getAttendees trigger function processed a request.')
@@ -24,22 +26,11 @@ def addOrUpdate(req: func.HttpRequest) -> func.HttpResponse:
     req_json = req.get_json()
     logging.info(req_json)
     # Now perform data checking!
-    if "name" not in req_json:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. You forgot your name though.", status_code=403)
-    if "phone" not in req_json:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. You forgot your phone though.", status_code=403)
-    if "team" not in req_json:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. You forgot your team though.", status_code=403)
-    if "note" not in req_json:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. You forgot your name though.", status_code=403)
-    # Get only the final 10 digits from the phone number
-    req_json["phone"] = ''.join(list(filter(lambda x: x.isdigit(), str(req_json["phone"]))))[-10:]
-    if len(req_json["phone"]) != 10:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. That's not even a phone number.", status_code=403)
+    valid, req_json = utils.validate_contains_required_fields(req_json, fields=["name", "phone", "team", "note"])
+    if not valid:
+        return req_json # Not actually the JSON, actually an error.
     if req_json["team"] not in {str(i) for i in range(11)}:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. That's not even a valid team.", status_code=403)
-    if len(req_json["name"]) < 1:
-        return func.HttpResponse("Stop fucking with my website, jesus christ it's supposed to be for one event. Chill. That's not even a real name.", status_code=403)
+        return func.HttpResponse(f"{utils.REJECT_MESSAGE} That's not even a valid team.", status_code=403)
     # Shorten note if too long.
     req_json["note"] = req_json["note"][:128]
 
