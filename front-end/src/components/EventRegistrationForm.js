@@ -572,8 +572,9 @@ class EventRegistrationForm extends Component {
               </p>
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Winning</strong><br/>
-                With the exception of Aces, every time a player drinks their team gains a point. The team with the least
-                number of points at the end of the game wins. Ties will be decided by a pushup contest.
+                Once the box is fully covered (every shape has a rule) everyone takes one additional turn before the game 
+                ends. The player who has taken the fewest number of drinks wins. Ties will be decided in order of favoratism
+                by my (Cole's) mother's choice.
               </p>
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
