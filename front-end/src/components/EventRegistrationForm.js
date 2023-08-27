@@ -26,7 +26,7 @@ class EventRegistrationForm extends Component {
   }
 
   componentDidMount() {
-    this.getTeams();
+    // this.getTeams();
   }
 
   toggleOverlay = () => {
@@ -126,7 +126,7 @@ class EventRegistrationForm extends Component {
     return (
       <div className="base" style={{ top: "30px", bottom: "0px", left: "0", right: "0", position: "absolute", overflowY: "scroll", alignItems: "center", verticalAlign: "middle"}}>
         <div className='form-container-container'>
-          <div className="form-container"> {/* Assign the class name */}
+          {/* <div className="form-container">
             <span>
               <h2 style={{ marginTop: "0px" }}>Drinking Game Olympics Signups</h2>
               <button className="help-button" onClick={this.toggleOverlay}>What is this?</button>
@@ -239,6 +239,18 @@ class EventRegistrationForm extends Component {
                 fixedHeaderScrollHeight='280px'
               />
             </StyleSheetManager>
+          </div> */}
+          <div className="form-container">
+            Thank you for coming! See you next year!
+            <br/>
+            <br/>
+            <br/>
+            Winners:
+            <ol>
+              <li>🥇 Kirkland Signature</li>
+              <li>🥈 I forget</li>
+              <li>🥉 Whiteclaw...?</li>
+            </ol>
           </div>
         </div>
         <Overlay isOpen={this.state.isOpen} onClose={this.toggleOverlay}>
