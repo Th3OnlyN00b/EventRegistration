@@ -1,4 +1,5 @@
 from typing import Any
+from utils import validate_contains_required_fields
 import random
 
 def create_token_request(req_json: dict[str, Any]) -> bool:
@@ -17,6 +18,6 @@ def create_token_request(req_json: dict[str, Any]) -> bool:
     """
     # Generate validation code
     code = f"{''.join([random.randint(0, 9) for _ in range(10)])}"
-    # Store validation code in DB with 60 secon expiry
+    # Store validation code in DB with 60 second expiry
     # Return `True` because successful.
     return True
