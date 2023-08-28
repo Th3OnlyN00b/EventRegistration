@@ -4,7 +4,7 @@ import azure.functions as func
 REJECT_MESSAGE = "Stop fucking with my website, jesus christ we're just launching. Chill."
 
 
-def validate_contains_required_fields(req_json: dict[str, Any], fields: list[str]) -> tuple[bool, func.HttpResponse | dict[str, Any]]:
+def validate_contains_required_fields(req_json: dict[str, Any], fields: list[str]) -> func.HttpResponse | dict[str, Any]:
     """
     Checks to make sure the correct fields are present in the request JSON object, returning an
     error if they are not.
@@ -16,9 +16,7 @@ def validate_contains_required_fields(req_json: dict[str, Any], fields: list[str
 
     Returns
     ------------
-    A tuple, the first element as a `bool` representing the validitiy of the JSON object, the
-    second item being the original dict with corrected values if valid or an 
-    `azure.functions.HttpResonse` object if invalid.
+    The original dict with corrected values if valid or an `azure.functions.HttpResonse` object if invalid.
     """
     fields = set(fields)
     # First check that they all exist
