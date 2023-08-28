@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './EventRegistrationForm.css';
-import DataTable from 'react-data-table-component'
-import { StyleSheetManager } from 'styled-components'
-import isPropValid from '@emotion/is-prop-valid'
+// import DataTable from 'react-data-table-component'
+// import { StyleSheetManager } from 'styled-components'
+// import isPropValid from '@emotion/is-prop-valid'
 import Overlay from './Overlay';
 
 class EventRegistrationForm extends Component {
@@ -13,13 +13,13 @@ class EventRegistrationForm extends Component {
     // eslint-disable-next-line 
     this.phonePattern = '^((\\+)?1)?[0-9][0-9][0-9](-)?[0-9][0-9][0-9](-)?[0-9][0-9][0-9][0-9]$'
     this.state = {
-      name: '',
-      phoneNumber: '',
-      rsvp: false,
+      // name: '',
+      // phoneNumber: '',
+      // rsvp: false,
       isOpen: false,
       teams: [],
-      team: '',
-      note: '',
+      // team: '',
+      // note: '',
       attendees: [],
       disabled: true
     };
@@ -121,7 +121,7 @@ class EventRegistrationForm extends Component {
   }
 
   render() {
-    const { name, phoneNumber, rsvp, team, note } = this.state;
+    // const { name, phoneNumber, rsvp, team, note } = this.state;
 
     return (
       <div className="base" style={{ top: "30px", bottom: "0px", left: "0", right: "0", position: "absolute", overflowY: "scroll", alignItems: "center", verticalAlign: "middle"}}>
