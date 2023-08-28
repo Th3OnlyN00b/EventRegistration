@@ -5,9 +5,15 @@ import json
 from azure.cosmos import CosmosClient
 from azure.cosmos.exceptions import CosmosHttpResponseError
 import utils
+from auth import auth_utils
 from argon2 import PasswordHasher
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+
+@app.route(route="getPhoneCode")
+def getPhoneCode(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('getPhoneCode trigger function processed a request.')
+    return auth_utils.create_token_request(req.get_json())
 
 @app.route(route="getAttendees")
 def getAttendees(req: func.HttpRequest) -> func.HttpResponse:
