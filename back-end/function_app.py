@@ -10,10 +10,30 @@ from argon2 import PasswordHasher
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="getPhoneCode")
-def getPhoneCode(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('getPhoneCode trigger function processed a request.')
+@app.route(route="createPhoneCode")
+def createPhoneCode(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Gets a six-digit phone code for validation that will be texted to the user and registers
+    it in a database table. This method will not return the code in it's call.
+
+    Returns
+    ----------
+    A http response containing a status code 200 if successful or a 5XX if unsuccessful.
+    """
+    logging.info('createPhoneCode trigger function processed a request.')
     return auth_utils.create_token_request(req.get_json())
+
+@app.route(route="getAuthToken")
+def getAuthToken(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Gets a 128-bit authorization token validating a user's login status and registers it in
+    the authorization database. This will be the only time this code is sent to the client,
+    so please store it securely. It will be needed for all authed requests.
+
+    Parameters
+    """
+    logging.info('getAuthToken trigger function processed a request.')
+    return auth_utils.create_token(req)
 
 @app.route(route="getAttendees")
 def getAttendees(req: func.HttpRequest) -> func.HttpResponse:
