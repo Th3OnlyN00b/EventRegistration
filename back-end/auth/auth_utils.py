@@ -20,11 +20,13 @@ def create_token_request(req_json: dict[str, Any]) -> bool:
 
     Returns
     ------------
-    A boolean, either true or false depending if the request was successful.
+    An HTTP request.
     """
+    # Validate req_json using utils
     # Generate validation code
     code = f"{''.join([random.randint(0, 9) for _ in range(10)])}"
     # Store validation code in DB with 60 second expiry
+    code_table = get_db_container_client("auth", "phone_code")
     # Return `True` because successful.
     return True
 
