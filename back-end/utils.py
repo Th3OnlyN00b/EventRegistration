@@ -32,9 +32,16 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: list[str], 
     req_json = req.get_json()
     # If needing to auth, do that first.
     if(authenticate):
-        if(not verify_token(req.headers['authorization'])):
+        if('authorization' not in req.headers):
+            # Missing token
+            return func.HttpResponse(f"{REJECT_MESSAGE} Authorization header is not present (but should be) though", status_code=401)
+        try:
+            if(not verify_token(req.headers['authorization'])):
+                # Unauthorized token
+                return func.HttpResponse(f"{REJECT_MESSAGE} Invalid or expired authorization header.", status_code=401)
+        except:
             # Invalid token
-            return func.HttpResponse(None, status_code=401)
+            return func.HttpResponse(f"{REJECT_MESSAGE} Authorization header in incorrect format. Should be `number.token`.", status_code=401)
     # First check that they all exist
     for field in fields:
         if field not in req_json:

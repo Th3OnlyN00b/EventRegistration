@@ -39,7 +39,7 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
 
     Parameters
     ------------
-    req `func.HttpRequest`: The request needing token validation. Required fields are `["phone", "code"]`
+    req `func.HttpRequest`: The request needing token validation. Required body fields are `["phone", "code"]`
 
     Returns
     ------------
