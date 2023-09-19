@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './EventRegistrationForm.css';
-import DataTable from 'react-data-table-component'
-import { StyleSheetManager } from 'styled-components'
-import isPropValid from '@emotion/is-prop-valid'
+// import DataTable from 'react-data-table-component'
+// import { StyleSheetManager } from 'styled-components'
+// import isPropValid from '@emotion/is-prop-valid'
 import Overlay from './Overlay';
 
 class EventRegistrationForm extends Component {
@@ -13,20 +13,20 @@ class EventRegistrationForm extends Component {
     // eslint-disable-next-line 
     this.phonePattern = '^((\\+)?1)?[0-9][0-9][0-9](-)?[0-9][0-9][0-9](-)?[0-9][0-9][0-9][0-9]$'
     this.state = {
-      name: '',
-      phoneNumber: '',
-      rsvp: false,
+      // name: '',
+      // phoneNumber: '',
+      // rsvp: false,
       isOpen: false,
       teams: [],
-      team: '',
-      note: '',
+      // team: '',
+      // note: '',
       attendees: [],
       disabled: true
     };
   }
 
   componentDidMount() {
-    this.getTeams();
+    // this.getTeams();
   }
 
   toggleOverlay = () => {
@@ -121,12 +121,12 @@ class EventRegistrationForm extends Component {
   }
 
   render() {
-    const { name, phoneNumber, rsvp, team, note } = this.state;
+    // const { name, phoneNumber, rsvp, team, note } = this.state;
 
     return (
       <div className="base" style={{ top: "30px", bottom: "0px", left: "0", right: "0", position: "absolute", overflowY: "scroll", alignItems: "center", verticalAlign: "middle"}}>
         <div className='form-container-container'>
-          <div className="form-container"> {/* Assign the class name */}
+          {/* <div className="form-container">
             <span>
               <h2 style={{ marginTop: "0px" }}>Drinking Game Olympics Signups</h2>
               <button className="help-button" onClick={this.toggleOverlay}>What is this?</button>
@@ -239,6 +239,18 @@ class EventRegistrationForm extends Component {
                 fixedHeaderScrollHeight='280px'
               />
             </StyleSheetManager>
+          </div> */}
+          <div className="form-container">
+            Thank you for coming! See you next year!
+            <br/>
+            <br/>
+            <br/>
+            Winners:
+            <ol>
+              <li>🥇 Kirkland Signature</li>
+              <li>🥈 I forget</li>
+              <li>🥉 Whiteclaw...?</li>
+            </ol>
           </div>
         </div>
         <Overlay isOpen={this.state.isOpen} onClose={this.toggleOverlay}>
@@ -572,8 +584,9 @@ class EventRegistrationForm extends Component {
               </p>
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Winning</strong><br/>
-                With the exception of Aces, every time a player drinks their team gains a point. The team with the least
-                number of points at the end of the game wins. Ties will be decided by a pushup contest.
+                Once the box is fully covered (every shape has a rule) everyone takes one additional turn before the game 
+                ends. The player who has taken the fewest number of drinks wins. Ties will be decided in order of favoratism
+                by my (Cole's) mother's choice.
               </p>
               <p style={{paddingLeft: '10px', fontSize: '12px'}}>
                 <strong style={{fontSize: 16}}>Answers to Common Questions</strong><br/>
