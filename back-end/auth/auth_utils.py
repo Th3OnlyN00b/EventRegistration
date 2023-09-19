@@ -3,7 +3,7 @@ import azure.functions as func
 from utils import validate_contains_required_fields, get_db_container_client
 import random
 import time
-import os
+import uuid as uuid_package
 import secrets
 import json
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
@@ -46,10 +46,18 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
     `'Set-Cookie'` header with the token.
     """
-    # Generate validation code
+    # Check validation code
     req_json = validate_contains_required_fields(req, ['phone', 'code'], authenticate=False)
     if type(req_json) == func.HttpResponse:
         return req_json
+    # Get the user ID so we're storing the IDs instead of the phone #
+    id_table = get_db_container_client("auth", "ids") # TODO: Change this from the 'auth' database once we leave Azure free tier
+    try:
+        uuid = id_table.read_item(req_json['phone'])['id']
+    except CosmosHttpResponseError:
+        # If it doesn't exist yet, make it.
+        uuid = uuid_package.uuid4()
+        id_table.create_item({'id': req_json['phone'], 'uuid': uuid})
     # Connect to DB
     phone_code_table = get_db_container_client("auth", "phone_code")
     # Read validation code stored in DB
@@ -62,23 +70,24 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     session_tokens_table = get_db_container_client("auth", "session_tokens")
     token = secrets.token_bytes(128)
     try:
-        session_tokens_table.create_item({'id': req_json['phone'], 'token': token, 'last_used': time.time()})
+        session_tokens_table.create_item({'id': uuid, 'token': token, 'last_used': time.time()})
     except CosmosHttpResponseError:
         # This is a 1 in ~1.08928894*(10^308) chance that the randomly genrated tokens are identical. This would be simply insane.
         return func.HttpResponse(json.dumps({'code': 'holyshit', 'message': "Go buy a lottery ticket."}), status_code=500)
     # The code is valid and a token has been inserted. Return the token to the user
     return func.HttpResponse(json.dumps({'code': 'success', 'message': "User logged in"}), status_code=200, headers={
-        'Set-Cookie': f"token={token}"
+        'Set-Cookie': f"token={token}",
+        'Set-Cookie': f"id={uuid}"
     })
 
 def verify_token(token_str: str) -> bool:
     # Fist extract the phone and token from the token string.
-    phone, token = token_str.split('.')
+    uuid, token = token_str.split('.')
     # Next, get the client for the token table
     session_tokens_table = get_db_container_client("auth", "session_tokens")
     try:
         # Try to update the 'last_used' field. Allows atomic database usage, and a single (cheap) operation.
-        session_tokens_table.patch_item(item=phone, partition_key=token, patch_operations=[{'op': 'replace', 'path': '/last_used', 'value': time.time()}])
+        session_tokens_table.patch_item(item=uuid, partition_key=token, patch_operations=[{'op': 'replace', 'path': '/last_used', 'value': time.time()}])
         # If this succeeds, the token is vailid
         return True
     except CosmosResourceNotFoundError:
