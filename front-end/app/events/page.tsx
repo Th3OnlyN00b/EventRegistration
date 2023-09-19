@@ -54,7 +54,7 @@ const EventCard = (props: EventCardProps) => {
   );
 };
 
-export const Events = () => {
+const Events = () => {
   return (
     <div>
       <Navbar />

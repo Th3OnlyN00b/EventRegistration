@@ -7,7 +7,7 @@ import partyThree from "../public/party-three.jpg";
 import partyFive from "../public/party-five.jpg";
 import negroni from "../public/negroni.jpg";
 
-export const Home = () => {
+const Home = () => {
   return (
     <div>
       <Navbar />
