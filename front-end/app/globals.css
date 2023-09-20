@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Set background color universally */
+body {
+  background-color: #e5e7eb;
+}
+
+/* Do not show scroll bar */
+::-webkit-scrollbar { 
+  display: none; 
+}
