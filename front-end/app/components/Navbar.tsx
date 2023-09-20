@@ -23,13 +23,15 @@ export const Navbar = () => {
           <div
             className={`mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600 ${
               home && "border-b-rose-600"
-            }`}>
+            }`}
+          >
             <Link href="/">Home</Link>
           </div>
           <div
             className={`mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600 ${
               events && "border-b-rose-600"
-            }`}>
+            }`}
+          >
             <Link href="/events">Upcoming Events</Link>
           </div>
           <div className="mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600">
@@ -38,7 +40,8 @@ export const Navbar = () => {
           <div
             className={`mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600 ${
               about && "border-b-rose-600"
-            }`}>
+            }`}
+          >
             <Link href="/about">About</Link>
           </div>
           <div className="flex items-center gap-2">
