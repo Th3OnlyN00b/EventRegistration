@@ -1,15 +1,13 @@
 import React from "react";
 import { GrLocation, GrCalendar, GrUnlock, GrLock } from "react-icons/gr";
-import Image from "next/image";
 import { Navbar } from "../components";
-import gameNight from "../../public/card-games.jpg";
-import charcuterie from "../../public/charcuterie.jpg";
-import pool from "../../public/pool.jpg";
-import tennis from "../../public/tennis.jpg";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import gameNight from "../images/card-games.jpg";
+import charcuterie from "../images/charcuterie.jpg";
+import pool from "../images/pool.jpg";
+import tennis from "../images/tennis.jpg";
 
 type EventCardProps = {
-  imageSrc: string | StaticImport;
+  imageSrc: string;
   altText: string;
   title: string;
   location: string;
@@ -21,9 +19,8 @@ const EventCard = (props: EventCardProps) => {
   const { date, title, location, altText, imageSrc, isPrivate } = props;
   return (
     <div className="flex h-[375px] flex-col rounded-xl p-4 shadow-md hover:cursor-pointer hover:shadow-2xl">
-      <Image
+      <img
         className="h-3/4 w-full rounded-xl object-cover"
-        priority
         alt={altText}
         src={imageSrc}
       />

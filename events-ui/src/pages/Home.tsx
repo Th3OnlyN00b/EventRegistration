@@ -1,20 +1,18 @@
 import React from "react";
-import Image from "next/image";
-import { Navbar } from "./components";
-
-import partyTwo from "../public/party-two.jpg";
-import partyThree from "../public/party-three.jpg";
-import partyFive from "../public/party-five.jpg";
-import negroni from "../public/negroni.jpg";
+import { Navbar } from "../components";
+import partyTwo from "../images/party-two.jpg";
+import partyThree from "../images/party-three.jpg";
+import partyFive from "../images/party-five.jpg";
+import negroni from "../images/negroni.jpg";
+import "../index.css";
 
 export const Home = () => {
   return (
     <div>
       <Navbar />
       <div className="relative mt-16 flex h-[1200px] justify-center">
-        <Image
+        <img
           className="absolute h-[1200px] w-8/12 rounded-2xl object-cover opacity-90"
-          priority
           alt="ahh"
           src={partyTwo}
         />
@@ -40,21 +38,18 @@ export const Home = () => {
           }
         </div>
         <div className="my-16 flex justify-center gap-12">
-          <Image
+          <img
             className="h-[600px] w-1/3 rounded-xl object-cover"
-            priority
             alt="mhmm"
             src={negroni}
           />
-          <Image
+          <img
             className="h-[600px] w-1/3 rounded-xl object-cover"
-            priority
             alt="hmmm"
             src={partyThree}
           />
-          <Image
+          <img
             className="h-[600px] w-1/3 rounded-xl object-cover"
-            priority
             alt="ooo"
             src={partyFive}
           />

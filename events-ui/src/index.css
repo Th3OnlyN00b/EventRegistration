@@ -4,10 +4,12 @@
 
 /* Set background color universally */
 body {
+  margin: 0;
+  padding: 0;
   background-color: #e5e7eb;
 }
 
 /* Do not show scroll bar */
-::-webkit-scrollbar { 
-  display: none; 
+::-webkit-scrollbar {
+  display: none;
 }
