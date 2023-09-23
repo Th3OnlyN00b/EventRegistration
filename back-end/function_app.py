@@ -11,6 +11,7 @@ from argon2 import PasswordHasher
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 app.register_functions(func.Blueprint()) 
 
+@app.function_name('Create Phone Code')
 @app.route(route="createPhoneCode")
 def createPhoneCode(req: func.HttpRequest) -> func.HttpResponse:
     """
