@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, About, Events } from "./pages";
+import { Home, About, Events, CreateEvent } from "./pages";
 import "./index.css";
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -12,6 +11,10 @@ const router = createBrowserRouter([
   {
     path: "/about",
     element: <About />
+  },
+  {
+    path: "/create",
+    element: <CreateEvent />
   },
   {
     path: "/events",

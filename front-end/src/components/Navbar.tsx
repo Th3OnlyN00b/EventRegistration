@@ -1,16 +1,12 @@
 import React from "react";
+import { useNavigate, useMatch } from "react-router-dom";
 
 export const Navbar = () => {
-  // const pathname = usePathname();
-  // const [home, events, about] = useMemo(() => {
-  //   const isHomePage = pathname === "/";
-  //   const isEventsPage = pathname === "/events";
-  //   const isAboutPage = pathname === "/about";
-  //   return [isHomePage, isEventsPage, isAboutPage];
-  // }, [pathname]);
-  const home = false;
-  const events = false;
-  const about = false;
+  const navigate = useNavigate();
+
+  const home = useMatch("/");
+  const events = useMatch("/events");
+  const about = useMatch("/about");
   return (
     <nav className="flex h-24 w-full items-center justify-center text-black">
       <div className="flex w-8/12 items-center justify-between">
@@ -21,31 +17,37 @@ export const Navbar = () => {
         </div>
         <div className="flex w-full items-center justify-end gap-10">
           <div
+            onClick={() => navigate("/")}
             className={`mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600 ${
               home && "border-b-rose-600"
             }`}
           >
-            <a href="/">Home</a>
+            Home
           </div>
           <div
+            onClick={() => navigate("/events")}
             className={`mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600 ${
               events && "border-b-rose-600"
             }`}
           >
-            <a href="/events">Upcoming Events</a>
+            Upcoming Events
           </div>
           <div className="mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600">
             My Events
           </div>
           <div
+            onClick={() => navigate("/about")}
             className={`mt-2 border-b-2 border-transparent font-light hover:cursor-pointer hover:border-b-rose-600 ${
               about && "border-b-rose-600"
             }`}
           >
-            <a href="/about">About</a>
+            About
           </div>
           <div className="flex items-center gap-2">
-            <button className="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-rose-700">
+            <button
+              onClick={() => navigate("/create")}
+              className="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-rose-700"
+            >
               Create event
             </button>
             <button className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow hover:bg-gray-200">
