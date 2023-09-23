@@ -1,11 +1,11 @@
 import React from "react";
 import { Navbar } from "../components";
 
-export default function About() {
+const About = () => {
   return (
     <div className="h-full">
       <Navbar />
-      <div className="flex flex-col items-center bg-rose-200 pb-8">
+      <div className="flex min-h-screen flex-col items-center bg-rose-100 pb-8">
         <div className="mt-8 flex w-1/2 text-3xl font-semibold">About us</div>
         <div className="mt-6 w-1/2 text-sm font-light text-black">
           {
@@ -55,4 +55,6 @@ export default function About() {
       </div>
     </div>
   );
-}
+};
+
+export default About;
