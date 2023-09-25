@@ -4,7 +4,6 @@ import os
 import json
 from azure.cosmos import CosmosClient
 from azure.cosmos.exceptions import CosmosHttpResponseError
-import utils
 from auth import auth_utils
 from argon2 import PasswordHasher
 
@@ -65,7 +64,7 @@ def createEvent(req: func.HttpRequest) -> func.HttpResponse:
     """
     pass
 
-app.route(route="getEvent")
+@app.route(route="getEvent")
 def getEvent(req: func.HttpRequest) -> func.HttpResponse:
     """
     Creates an event structure via the JSON passed in and stores it in the database.
@@ -86,7 +85,7 @@ def getEvent(req: func.HttpRequest) -> func.HttpResponse:
     """
     pass
 
-app.route(route="getAllEventsHostedBy")
+@app.route(route="getAllEventsHostedBy")
 def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
     """
     Creates an event structure via the JSON passed in and stores it in the database.
@@ -108,4 +107,6 @@ app.route(route="getAllPrivateEvents")
 def getAllPrivateEvents(req: func.HttpRequest) -> func.HttpResponse:
     pass
 
-app.route(route="getAllEvents")
+@app.route(route="getAllEvents")
+def getAllEvents(req: func.HttpRequest) -> func.HttpResponse:
+    pass

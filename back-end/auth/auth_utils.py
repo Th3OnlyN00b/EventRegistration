@@ -8,7 +8,7 @@ import secrets
 import json
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 
-def create_token_request(req_json: dict[str, Any]) -> bool:
+def create_token_request(req_json: dict[str, Any]) -> func.HttpResponse:
     """
     Attempts to create a valid login token request by sending a text to the user using the 
     [PhoneNumberValidateFree](https://rapidapi.com/larroyouy70/api/phonenumbervalidatefree/) API.
@@ -24,11 +24,11 @@ def create_token_request(req_json: dict[str, Any]) -> bool:
     """
     # Validate req_json using utils
     # Generate validation code
-    code = f"{''.join([random.randint(0, 9) for _ in range(10)])}"
+    code = f"{''.join([str(random.randint(0, 9)) for _ in range(10)])}"
     # Store validation code in DB with 60 second expiry
     code_table = get_db_container_client("auth", "phone_code")
     # Return `True` because successful.
-    return True
+    return func.HttpResponse("hello", 200)
 
 # create_token({'phone': "7816368946", 'code': '123456'})
 def create_token(req: func.HttpRequest) -> func.HttpResponse:

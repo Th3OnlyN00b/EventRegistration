@@ -2,7 +2,6 @@ from typing import Any
 import azure.functions as func
 from azure.cosmos import CosmosClient, ContainerProxy
 import os
-from auth.auth_utils import verify_token
 
 REJECT_MESSAGE = "Stop fucking with my website, jesus christ we're just launching. Chill."
 
@@ -28,6 +27,7 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: list[str], 
     ------------
     The body dict with corrected values if valid or an `azure.functions.HttpResonse` object if invalid.
     """
+    from auth.auth_utils import verify_token
     fields = set(fields)
     req_json = req.get_json()
     # If needing to auth, do that first.
