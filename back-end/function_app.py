@@ -5,6 +5,7 @@ import json
 from azure.cosmos import CosmosClient
 from azure.cosmos.exceptions import CosmosHttpResponseError
 from auth import auth_utils
+from events import events
 from argon2 import PasswordHasher
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -83,7 +84,7 @@ def getEvent(req: func.HttpRequest) -> func.HttpResponse:
     A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
     `'Set-Cookie'` header with the token.
     """
-    return func.HttpResponse("Not implemented", status_code=501) # TODO
+    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
 
 @app.route(route="getAllEventsHostedBy")
 def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
@@ -101,12 +102,12 @@ def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
     A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
     `'Set-Cookie'` header with the token.
     """
-    return func.HttpResponse("Not implemented", status_code=501) # TODO
+    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
 
 app.route(route="getAllPrivateEvents")
 def getAllPrivateEvents(req: func.HttpRequest) -> func.HttpResponse:
-    return func.HttpResponse("Not implemented", status_code=501) # TODO
+    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
 
 @app.route(route="getAllEvents")
 def getAllEvents(req: func.HttpRequest) -> func.HttpResponse:
-    return func.HttpResponse("Not implemented", status_code=501) # TODO
+    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
