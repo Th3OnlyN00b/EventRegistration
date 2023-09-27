@@ -16,11 +16,11 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
 
     Parameters
     ------------
-    req_json `dict[str, Any]`: The request needing token validation. Required fields are `["phone"]`
+    req `func.HttpRequest`: The request needing token validation. Required fields are `["phone"]`
 
     Returns
     ------------
-    An HTTP request.
+    An `func.HttpResponse`, denoting the success or failure of this code creation.
     """
     # Validate req_json using utils
     req_json = validate_contains_required_fields(req, set(["phone"]))
