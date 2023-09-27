@@ -12,7 +12,7 @@ def get_db_container_client(db_name: str, container_name: str) -> ContainerProxy
     return table
 
 
-def validate_contains_required_fields(req: func.HttpRequest, fields: list[str], authenticate=True) -> func.HttpResponse | dict[str, Any]:
+def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], authenticate=True) -> func.HttpResponse | dict[str, Any]:
     """
     Checks to make sure the correct fields are present in the request JSON object, returning an
     error if they are not.
@@ -28,8 +28,7 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: list[str], 
     The body dict with corrected values if valid or an `azure.functions.HttpResonse` object if invalid.
     """
     from auth.auth_utils import verify_token
-    fields = set(fields)
-    req_json = req.get_json()
+    req_json: dict = req.get_json()
     # If needing to auth, do that first.
     if(authenticate):
         if('authorization' not in req.headers):
@@ -38,10 +37,10 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: list[str], 
         try:
             if(not verify_token(req.headers['authorization'])):
                 # Unauthorized token
-                return func.HttpResponse(f"{REJECT_MESSAGE} Invalid or expired authorization header.", status_code=401)
+                return func.HttpResponse(f"{REJECT_MESSAGE} You've got an invalid or expired authorization header.", status_code=401)
         except:
             # Invalid token
-            return func.HttpResponse(f"{REJECT_MESSAGE} Authorization header in incorrect format. Should be `number.token`.", status_code=401)
+            return func.HttpResponse(f"{REJECT_MESSAGE} Your authorization header in incorrect format. Should be `number.token`.", status_code=401)
     # First check that they all exist
     for field in fields:
         if field not in req_json:

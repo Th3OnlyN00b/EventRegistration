@@ -26,7 +26,7 @@ def createPhoneCode(req: func.HttpRequest) -> func.HttpResponse:
     A http response containing a status code 200 if successful or a 5XX if unsuccessful.
     """
     logging.info('createPhoneCode trigger function processed a request.')
-    return auth_utils.create_token_request(req.get_json())
+    return auth_utils.create_token_request(req)
 
 @app.route(route="getAuthToken")
 def getAuthToken(req: func.HttpRequest) -> func.HttpResponse:
@@ -62,7 +62,7 @@ def createEvent(req: func.HttpRequest) -> func.HttpResponse:
     A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
     `'Set-Cookie'` header with the token.
     """
-    pass
+    return func.HttpResponse("Not implemented", status_code=501) # TODO
 
 @app.route(route="getEvent")
 def getEvent(req: func.HttpRequest) -> func.HttpResponse:
@@ -83,7 +83,7 @@ def getEvent(req: func.HttpRequest) -> func.HttpResponse:
     A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
     `'Set-Cookie'` header with the token.
     """
-    pass
+    return func.HttpResponse("Not implemented", status_code=501) # TODO
 
 @app.route(route="getAllEventsHostedBy")
 def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
@@ -101,12 +101,12 @@ def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
     A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
     `'Set-Cookie'` header with the token.
     """
-    pass
+    return func.HttpResponse("Not implemented", status_code=501) # TODO
 
 app.route(route="getAllPrivateEvents")
 def getAllPrivateEvents(req: func.HttpRequest) -> func.HttpResponse:
-    pass
+    return func.HttpResponse("Not implemented", status_code=501) # TODO
 
 @app.route(route="getAllEvents")
 def getAllEvents(req: func.HttpRequest) -> func.HttpResponse:
-    pass
+    return func.HttpResponse("Not implemented", status_code=501) # TODO

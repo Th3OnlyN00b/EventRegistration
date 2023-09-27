@@ -8,7 +8,7 @@ import secrets
 import json
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 
-def create_token_request(req_json: dict[str, Any]) -> func.HttpResponse:
+def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     """
     Attempts to create a valid login token request by sending a text to the user using the 
     [PhoneNumberValidateFree](https://rapidapi.com/larroyouy70/api/phonenumbervalidatefree/) API.
@@ -23,7 +23,7 @@ def create_token_request(req_json: dict[str, Any]) -> func.HttpResponse:
     An HTTP request.
     """
     # Validate req_json using utils
-    req_json = validate_contains_required_fields(req_json, ["phone"])
+    req_json = validate_contains_required_fields(req, set(["phone"]))
     if type(req_json) == func.HttpResponse:
         return req_json
     # Generate validation code
@@ -32,7 +32,7 @@ def create_token_request(req_json: dict[str, Any]) -> func.HttpResponse:
     code_table = get_db_container_client("auth", "phone_code")
     ##### TODO: Finish this.
     # Return `True` because successful.
-    return func.HttpResponse("hello", 200)
+    return func.HttpResponse("hello", status_code=200)
 
 # create_token({'phone': "7816368946", 'code': '123456'})
 def create_token(req: func.HttpRequest) -> func.HttpResponse:
@@ -51,13 +51,15 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     `'Set-Cookie'` header with the token.
     """
     # Check validation code
-    req_json = validate_contains_required_fields(req, ['phone', 'code'], authenticate=False)
+    req_json = validate_contains_required_fields(req, set(['phone', 'code']), authenticate=False)
     if type(req_json) == func.HttpResponse:
         return req_json
+    # For static type checking
+    assert type(req_json) == dict
     # Get the user ID so we're storing the IDs instead of the phone #
     id_table = get_db_container_client("auth", "ids") # TODO: Change this from the 'auth' database once we leave Azure free tier
     try:
-        uuid = id_table.read_item(req_json['phone'])['id']
+        uuid = id_table.read_item(req_json['phone'], None)['id']
     except CosmosHttpResponseError:
         # If it doesn't exist yet, make it.
         uuid = uuid_package.uuid4()
