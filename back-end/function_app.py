@@ -23,7 +23,7 @@ def createPhoneCode(req: func.HttpRequest) -> func.HttpResponse:
 
     Returns
     ------------
-    A http response containing a status code 200 if successful or a 5XX if unsuccessful.
+    A `func.HttpResponse`, denoting the success or failure of this code creation.
     """
     logging.info('createPhoneCode trigger function processed a request.')
     return auth_utils.create_token_request(req)
