@@ -12,7 +12,7 @@ def create_token_request(req_json: dict[str, Any]) -> func.HttpResponse:
     """
     Attempts to create a valid login token request by sending a text to the user using the 
     [PhoneNumberValidateFree](https://rapidapi.com/larroyouy70/api/phonenumbervalidatefree/) API.
-    Stores the generated code in a database, with the code valid for 60 seconds
+    Stores the generated code in a database, with the code valid for 90 seconds
 
     Parameters
     ------------
@@ -23,10 +23,14 @@ def create_token_request(req_json: dict[str, Any]) -> func.HttpResponse:
     An HTTP request.
     """
     # Validate req_json using utils
+    req_json = validate_contains_required_fields(req_json, ["phone"])
+    if type(req_json) == func.HttpResponse:
+        return req_json
     # Generate validation code
     code = f"{''.join([str(random.randint(0, 9)) for _ in range(10)])}"
     # Store validation code in DB with 60 second expiry
     code_table = get_db_container_client("auth", "phone_code")
+    ##### TODO: Finish this.
     # Return `True` because successful.
     return func.HttpResponse("hello", 200)
 
