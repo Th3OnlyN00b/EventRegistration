@@ -84,7 +84,7 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(json.dumps({'code': 'wrong', 'message': "Code timed out or is incorrect"}), status_code=403)
     # At this point the code is right. We have to generate a token and store it in the database.
     session_tokens_table = get_db_container_client("auth", "session_tokens")
-    token = secrets.token_bytes(128)
+    token = secrets.token_bytes(128).decode('UTF-8')
     try:
         session_tokens_table.create_item({'id': uuid, 'token': token, 'last_used': time.time()})
     except CosmosHttpResponseError:
