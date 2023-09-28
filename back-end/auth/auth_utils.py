@@ -71,7 +71,7 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
         uuid = id_table.read_item(req_json['phone'], None)['id']
     except CosmosHttpResponseError:
         # If it doesn't exist yet, make it.
-        uuid = uuid_package.uuid4()
+        uuid = str(uuid_package.uuid4())
         id_table.create_item({'id': req_json['phone'], 'uuid': uuid})
     # Connect to DB
     phone_code_table = get_db_container_client("auth", "phone_code")
