@@ -23,9 +23,12 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     An `func.HttpResponse`, denoting the success or failure of this code creation.
     """
     # Validate req_json using utils
-    req_json = validate_contains_required_fields(req, set(["phone"]))
-    if type(req_json) == func.HttpResponse:
-        return req_json
+    validation = validate_contains_required_fields(req, set(['phone']), authenticate=False)
+    if type(validation) == func.HttpResponse:
+        return validation
+    # For static type checking
+    assert type(validation) == tuple
+    req_json, _ = validation
     # Generate validation code
     code = str(secrets.randbelow(1000000)).zfill(6)
     # Store validation code in DB with 90 second expiry
@@ -56,11 +59,12 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     `'Set-Cookie'` header with the token.
     """
     # Check validation code
-    req_json = validate_contains_required_fields(req, set(['phone', 'code']), authenticate=False)
-    if type(req_json) == func.HttpResponse:
-        return req_json
+    validation = validate_contains_required_fields(req, set(['phone', 'code']), authenticate=False)
+    if type(validation) == func.HttpResponse:
+        return validation
     # For static type checking
-    assert type(req_json) == dict
+    assert type(validation) == tuple
+    req_json, _ = validation
     # Get the user ID so we're storing the IDs instead of the phone #
     id_table = get_db_container_client("auth", "ids") # TODO: Change this from the 'auth' database once we leave Azure free tier
     try:

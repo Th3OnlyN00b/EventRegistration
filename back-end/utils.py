@@ -12,7 +12,7 @@ def get_db_container_client(db_name: str, container_name: str) -> ContainerProxy
     return table
 
 
-def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], authenticate=True) -> func.HttpResponse | dict[str, Any]:
+def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], authenticate=True) -> func.HttpResponse | tuple[dict[str, Any], str | None]:
     """
     Checks to make sure the correct fields are present in the request JSON object, returning an
     error if they are not.
@@ -56,4 +56,4 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], a
     if "name" in fields:
         if len(req_json["name"]) < 1:
             return func.HttpResponse(f"{REJECT_MESSAGE} That's not even a real name.", status_code=400)
-    return req_json
+    return (req_json, None if not authenticate else req.headers['authorization'].split('.')[0]) # Pass the UUID of the user if authed
