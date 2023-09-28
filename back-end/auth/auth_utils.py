@@ -69,7 +69,7 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     # Get the user ID so we're storing the IDs instead of the phone #
     id_table = get_db_container_client("auth", "ids") # TODO: Change this from the 'auth' database once we leave Azure free tier
     try:
-        uuid = id_table.read_item(req_json['phone'], NonePartitionKeyValue)['uuid']
+        uuid = id_table.read_item(req_json['phone'], req_json['phone'])['uuid']
     except CosmosHttpResponseError:
         # If it doesn't exist yet, make it.
         uuid = str(uuid_package.uuid4())
