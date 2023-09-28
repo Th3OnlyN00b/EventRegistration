@@ -27,10 +27,15 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     if type(req_json) == func.HttpResponse:
         return req_json
     # Generate validation code
-    code = f"{''.join([str(random.randint(0, 9)) for _ in range(10)])}"
-    # Store validation code in DB with 60 second expiry
+    code = str(secrets.randbelow(1000000)).zfill(6)
+    # Store validation code in DB with 90 second expiry
     code_table = get_db_container_client("auth", "phone_code")
-    ##### TODO: Finish this.
+    # Time to live has already been set to 90 seconds, so we are good on that.
+    try:
+        code_table.create_item({'id': req_json["phone"], 'code': code})
+    except CosmosHttpResponseError:
+        # This may happen in a 1 in a million chance
+        return func.HttpResponse(json.dumps({'code': 'Code already exists for this number!', 'message': "Please try again."}), status_code=500)
     # Return `True` because successful.
     return func.HttpResponse("hello", status_code=200)
 
