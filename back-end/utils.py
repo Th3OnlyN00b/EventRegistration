@@ -28,7 +28,11 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], a
     The body dict with corrected values if valid or an `azure.functions.HttpResonse` object if invalid.
     """
     from auth.auth_utils import verify_token
-    req_json: dict = req.get_json()
+    if req.method.lower() == "get":
+        print("this is a get method")
+        req_json = dict(req.params)
+    else:
+        req_json: dict = req.get_json()
     # If needing to auth, do that first.
     if(authenticate):
         if('authorization' not in req.headers):
