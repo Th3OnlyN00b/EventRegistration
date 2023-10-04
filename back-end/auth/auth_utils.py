@@ -97,17 +97,18 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(json.dumps({'code': 'wrong', 'message': "Code timed out or is incorrect"}), status_code=403)
     # At this point the code is right. We have to generate a token and store it in the database.
     session_tokens_table = get_db_container_client("auth", "session_tokens")
-    token = secrets.token_bytes(128).decode('UTF-8')
+    token = secrets.token_hex(128)
     try:
         session_tokens_table.create_item({'id': uuid, 'token': token, 'last_used': time.time()})
     except CosmosHttpResponseError:
         # This is a 1 in ~1.08928894*(10^308) chance that the randomly genrated tokens are identical. This would be simply insane.
         return func.HttpResponse(json.dumps({'code': 'holyshit', 'message': "Go buy a lottery ticket."}), status_code=500)
     # The code is valid and a token has been inserted. Return the token to the user
-    return func.HttpResponse(json.dumps({'code': 'success', 'message': "User logged in"}), status_code=200, headers={
-        'Set-Cookie': f"token={token}",
-        'Set-Cookie': f"id={uuid}"
-    })
+    response = func.HttpResponse(json.dumps({'code': 'success', 'message': "User logged in"}), status_code=200)
+    # Headers have to be added by this method as the default is a dict, which doesn't work because dict keys are unique
+    response.headers.add("Set-Cookie", f"token={token}")
+    response.headers.add("Set-Cookie", f"id={uuid}")
+    return response
 
 def verify_token(token_str: str) -> bool:
     # Fist extract the phone and token from the token string.
