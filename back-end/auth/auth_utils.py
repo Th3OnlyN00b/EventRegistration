@@ -69,8 +69,8 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
 
     Returns
     ------------
-    A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include a
-    `'Set-Cookie'` header with the token.
+    A `func.HttpResponse`, denoting the success or failure of this token creation. If successful, will include
+    `'Set-Cookie'` headers with the token and user id.
     """
     # Check validation code
     validation = validate_contains_required_fields(req, set(['phone', 'code']), authenticate=False)
