@@ -1,10 +1,7 @@
 import os
+PLATFORM_NAME = "Untitled Event Planner"
 TEXTING_API = {
-    'url': "https://phonenumbervalidatefree.p.rapidapi.com/ts_PhoneNumberValidateTest.jsp",
-    'headers': {
-        "X-RapidAPI-Key": os.environ['TEXTING_API_KEY'],
-        "X-RapidAPI-Host": "phonenumbervalidatefree.p.rapidapi.com"
-    },
-    'querystring': {"number":"+59894887799","country":"UY"}
-
+    'account_sid': "ACe5273252a62a877177ef449eeed79d20",
+    'auth_token': os.environ["TWILIO_AUTH_TOKEN"],
+    'outgoing_number': '+18444201362'
 }

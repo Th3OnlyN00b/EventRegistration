@@ -1,7 +1,9 @@
 from typing import Any
 import azure.functions as func
 from utils import validate_contains_required_fields, get_db_container_client
-import random
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+import constants
 import time
 import uuid as uuid_package
 import secrets
@@ -12,8 +14,8 @@ from azure.cosmos.partition_key import NonePartitionKeyValue
 def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     """
     Attempts to create a valid login token request by sending a text to the user using the 
-    [PhoneNumberValidateFree](https://rapidapi.com/larroyouy70/api/phonenumbervalidatefree/) API.
-    Stores the generated code in a database, with the code valid for 90 seconds
+    [Twilio](https://github.com/TwilioDevEd/api-snippets/blob/master/quickstart/python/sms/example-1/send_notifications.8.x.py)
+    API. Stores the generated code in a database, with the code valid for 90 seconds
 
     Parameters
     ------------
@@ -38,17 +40,28 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     try:
         code_table.create_item({'id': req_json["phone"], 'code': code})
     except CosmosHttpResponseError:
-        # This may happen in a 1 in a million chance
-        return func.HttpResponse(json.dumps({'code': 'Code already exists for this number!', 'message': "Please try again."}), status_code=500)
-    # Return `True` because successful.
-    return func.HttpResponse("hello", status_code=200)
+        # This may happen in a 1 in (literally) a million chance
+        return func.HttpResponse(json.dumps({'code': 'duplicate', 'message': "Code already exists for this number! Please try again."}), status_code=500)
+    try:
+        twilio_client = Client(constants.TEXTING_API['account_sid'], constants.TEXTING_API['auth_token'])
+        message = twilio_client.messages.create(
+            body=f'{code} is your one-time verification code from {constants.PLATFORM_NAME}',
+            to=req_json["phone"],
+            from_=constants.TEXTING_API['outgoing_number']
+        )
+        print(f"Text message sent to {req_json['phone']}")
+    except TwilioRestException as e:
+        print("Failed lmao")
+        return func.HttpResponse(json.dumps({'code': 'twilio', 'message': "Twilio has experienced a failure. Please try again."}), status_code=500)
+    # Return `200` because successful.
+    return func.HttpResponse(json.dumps({'code': 'success', 'message': "Code sent successfully"}), status_code=200)
 
 # create_token({'phone': "7816368946", 'code': '123456'})
 def create_token(req: func.HttpRequest) -> func.HttpResponse:
     """
     Attempts to create a valid login token verifying a code sent in a text to the user using the 
-    [PhoneNumberValidateFree](https://rapidapi.com/larroyouy70/api/phonenumbervalidatefree/) API.
-    Checks the stored code in a database, and if correct will send back a session token.
+    [Twilio](https://github.com/TwilioDevEd/api-snippets/blob/master/quickstart/python/sms/example-1/send_notifications.8.x.py)
+    API. Checks the stored code in a database, and if correct will send back a session token.
 
     Parameters
     ------------

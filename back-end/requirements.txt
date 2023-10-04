@@ -7,3 +7,4 @@ azure-cosmos
 azure-identity
 argon2-cffi
 requests
+twilio
