@@ -53,9 +53,10 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], a
     # Phone numbers should be 10 digits and a phone number. TODO: Support international phone numbers
     if "phone" in fields:
         # Get final ten digits, ignoring country codes, then add the US country code (1) on the front
-        req_json["phone"] = '+1' + ''.join(list(filter(lambda x: x.isdigit(), str(req_json["phone"]))))[-10:]
+        req_json["phone"] = ''.join(list(filter(lambda x: x.isdigit(), str(req_json["phone"]))))[-10:]
         if len(req_json["phone"]) != 10:
             return func.HttpResponse(f"{REJECT_MESSAGE} That's not even a phone number.", status_code=400)
+        req_json["phone"] = '+1' + req_json["phone"]
     # Names should be at least a single character
     if "name" in fields:
         if len(req_json["name"]) < 1:
