@@ -62,7 +62,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'vibes-prod'
+          app-name: 'untitledeventplanner'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F94C561DD4354106B4B7AD41CABF52A0 }}
