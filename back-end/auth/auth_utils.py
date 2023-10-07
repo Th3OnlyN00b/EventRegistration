@@ -6,6 +6,7 @@ from twilio.base.exceptions import TwilioRestException
 import constants
 import time
 import uuid as uuid_package
+import hashlib
 import secrets
 import json
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
@@ -34,11 +35,13 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     req_json, _ = validation
     # Generate validation code
     code = str(secrets.randbelow(1000000)).zfill(6)
+    phone = req_json["phone"]
     # Store validation code in DB with 90 second expiry
     code_table = get_db_container_client("auth", "phone_code")
     # Time to live has already been set to 90 seconds, so we are good on that.
     try:
-        code_table.create_item({'id': req_json["phone"], 'code': code})
+        # Note that we're hashing the code using the phone number as an interloped salt. This is to prevent any issues if this database is compromised.
+        code_table.create_item({'id': phone, 'code': hash(code, phone)})
     except CosmosHttpResponseError:
         # This may happen in a 1 in (literally) a million chance
         return func.HttpResponse(json.dumps({'code': 'duplicate', 'message': "Code already exists for this number! Please try again."}), status_code=500)
@@ -46,12 +49,12 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
         twilio_client = Client(constants.TEXTING_API['account_sid'], constants.TEXTING_API['auth_token'])
         message = twilio_client.messages.create(
             body=f'{code} is your one-time verification code from {constants.PLATFORM_NAME}',
-            to=req_json["phone"],
+            to=phone,
             from_=constants.TEXTING_API['outgoing_number']
         )
         print(f"Text message sent to {req_json['phone']}")
     except TwilioRestException as e:
-        print("Failed lmao")
+        print("Failed to send Twilio error. If you're seeing a lot of this message, it's likely that Twilio has gone down.")
         return func.HttpResponse(json.dumps({'code': 'twilio', 'message': "Twilio has experienced a failure. Please try again."}), status_code=500)
     # Return `200` because successful.
     return func.HttpResponse(json.dumps({'code': 'success', 'message': "Code sent successfully"}), status_code=200)
@@ -123,3 +126,22 @@ def verify_token(token_str: str) -> bool:
     except CosmosResourceNotFoundError:
         # If this fails, the token is invalid
         return False
+
+
+########### HELPER FUNCITONS BELOW ##############
+def hash(code: str, phone: str) -> str:
+    """
+    Creates a secure sha256 hash from the code and phone number passed in. This prevents us from
+    storing specific codes in raw form, and makes it much harder for an attacker to use any information
+    obtained from a database leak.
+
+    Parameters
+    -----------
+    code `str`: The numeric code to be hashed, in string format.\\
+    phone `str`: The phone number this code is associated with, in string format.
+
+    Returns
+    -----------
+    A string representing the hex-code version of the sha256 hash. 
+    """
+    return hashlib.sha256(bytes(phone[:4] + code + phone[2:-1], encoding='utf-8')).hexdigest()
