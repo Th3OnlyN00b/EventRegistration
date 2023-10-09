@@ -5,6 +5,7 @@
 azure-functions
 azure-cosmos
 azure-identity
+azure-storage-blob
 argon2-cffi
 requests
 twilio

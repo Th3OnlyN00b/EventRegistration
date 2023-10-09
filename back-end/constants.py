@@ -12,3 +12,5 @@ TEXTING_API = {
     'auth_token': os.environ["TWILIO_AUTH_TOKEN"], # Twilio's API token. Stored as a env variable
     'outgoing_number': '+18444201362' # The number from which all outgoing texts are sent from
 }
+# Name of the azure storage blob container for event images
+EVENT_IMAGES_BLOB_CONTAINER_NAME = "event-images"

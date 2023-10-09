@@ -1,16 +1,48 @@
-from typing import Any
+from typing import TYPE_CHECKING
 import azure.functions as func
+from azure.storage.blob import BlobServiceClient
+if TYPE_CHECKING: # Neat feature. Will evaluate to false during runtime, always, but allows for using these imports for type hints
+    from azure.storage.blob import BlobClient
+    from typing import Any
 from azure.cosmos import CosmosClient, ContainerProxy
 import os
 
 REJECT_MESSAGE = "Stop fucking with my website, jesus christ we're just launching. Chill."
 
 def get_db_container_client(db_name: str, container_name: str) -> ContainerProxy:
+    """
+    Creates a CosmosDB client from the environment variable connection string, connecting to the
+    database and container passed in. 
+    
+    Parameters
+    ------------
+    db_name `str`: The name of the database to connect to\\
+    container_name `str`: The name of the container to connect to
+
+    Returns
+    ------------
+    A `azure.cosmos.ContainerProxy` item representing the table.
+    """
     client = CosmosClient.from_connection_string(os.environ['COSMOS_CONNECTION_STRING'])
     database = client.get_database_client(db_name)
     table = database.get_container_client(container_name)
     return table
 
+def get_blob_client(container_name: str, blob_name: str) -> BlobClient:
+    """
+    Creates a blob client from the environment variable connection string, connecting to the
+    container and blob passed in. This blob does not need to exist. 
+    
+    Parameters
+    ------------
+    container_name `str`: The name of the container to connect to\\
+    blob_name `str`: The name of the blob to connect to. Does not need to already exist.
+
+    Returns
+    ------------
+    A `azure.storage.blob.BlobClient` item representing the blob.
+    """
+    return BlobServiceClient.from_connection_string(os.environ['BLOB_STORAGE_CONNECTION_STRING']).get_container_client(container_name).get_blob_client(blob_name)
 
 def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], authenticate=True) -> func.HttpResponse | tuple[dict[str, Any], str | None]:
     """
@@ -25,7 +57,8 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], a
 
     Returns
     ------------
-    The body dict with corrected values if valid or an `azure.functions.HttpResonse` object if invalid.
+    The body dict with corrected values if valid or an `azure.functions.HttpResonse` object if invalid. Status code
+    401 for auth-related issues, 400 otherwise.
     """
     from auth.auth_utils import verify_token
     if req.method.lower() == "get":
