@@ -16,7 +16,7 @@ import json
 import constants
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 from utils import validate_contains_required_fields, get_db_container_client
-from event_utils import update_event
+from events.event_utils import update_event
 
 def create_event(req: func.HttpRequest) -> func.HttpResponse:
     """

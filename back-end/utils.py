@@ -28,7 +28,7 @@ def get_db_container_client(db_name: str, container_name: str) -> ContainerProxy
     table = database.get_container_client(container_name)
     return table
 
-def get_blob_client(container_name: str, blob_name: str) -> BlobClient:
+def get_blob_client(container_name: str, blob_name: str) -> 'BlobClient':
     """
     Creates a blob client from the environment variable connection string, connecting to the
     container and blob passed in. This blob does not need to exist. 
@@ -44,7 +44,7 @@ def get_blob_client(container_name: str, blob_name: str) -> BlobClient:
     """
     return BlobServiceClient.from_connection_string(os.environ['BLOB_STORAGE_CONNECTION_STRING']).get_container_client(container_name).get_blob_client(blob_name)
 
-def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], authenticate=True) -> func.HttpResponse | tuple[dict[str, Any], str | None]:
+def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], authenticate=True) -> func.HttpResponse | tuple[dict[str, 'Any'], str | None]:
     """
     Checks to make sure the correct fields are present in the request JSON object, returning an
     error if they are not.
