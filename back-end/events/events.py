@@ -36,7 +36,7 @@ def create_event(req: func.HttpRequest) -> func.HttpResponse:
     """
 
     # First we'll validate the input
-    validation = validate_contains_required_fields(req, set(['event']), authenticate=True)
+    validation = validate_contains_required_fields(req, set(['title', 'form']), authenticate=True)
     if type(validation) == func.HttpResponse:
         return validation
     # For static type checking
