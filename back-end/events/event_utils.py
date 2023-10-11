@@ -8,7 +8,7 @@ import logging
 import base64
 from constants import EVENT_IMAGES_BLOB_CONTAINER_NAME
 from utils import get_db_container_client, get_blob_client
-from ..user_utils import remove_event_from_user, add_event_to_user
+from ..user_utils import remove_event_from_user, add_event_to_user, create_user_event_record
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 from azure.storage.blob import ContentSettings
 import azure.functions as func
@@ -25,7 +25,7 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
     title `str`: The title for the event.\\
     description `str`: The description for the event.\\
     image `str`: The base64-encoded string representing the event image. Must contain the URI header.\\
-    public `bool`: If this event is public.\\
+    public `bool`: If this event is public. Required if creating a new event.\\
     new_owner `str`: Who should own this event. Should contain the user's id from the `ids` table.\\
     hosts `list[str]`: Who the hosts of this event should be. Should contain the users' ids from the `ids` table.\\
     form `list`: The json-style representation for the form for this event.\\
@@ -48,38 +48,35 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
     if new_owner is not None:
         # Add the event to the new owner
         update['owner'] = new_owner
-        events_by_user_table = get_db_container_client('auth', 'events_by_user') # TODO: Change this out of auth once we leave free tier
-        try: # The new user may not have an entry here
-            new_owner_user_record = events_by_user_table.read_item(new_owner, new_owner)
-        except CosmosResourceNotFoundError as e:
-            # Generate a dummy old item
-            new_owner_user_record: dict[str, Any] = {'id': new_owner, 'own': [], 'host': [], 'attended': []}
         # Identify if we need to remove from an old user
         if current_owner is None:
             # Then we're creating an event
-            record = {'id': event_id, 'public': public}
+            assert type(public) == bool # Which means `public` cannot be None
+            record = create_user_event_record(event_id, public)
         else:
             # Try to get the entry for the old user
             record = remove_event_from_user(current_owner, event_id, 'own')
-        # We have to do this either way
-        new_owner_user_record['own'].append(record)
-        events_by_user_table.upsert_item(new_owner_user_record)
+        # Add the event record to the new user
+        add_event_to_user(new_owner, record, 'own')
     if hosts is not None:
         # Need to check if any of the hosts have changed and, if so, remove the old ones and add the new ones
         update['hosts'] = hosts
         new_hosts = set(hosts)
         try:
-            old_hosts = events_table.read_item(event_id, event_id)['hosts']
+            event = events_table.read_item(event_id, event_id)
+            old_hosts: set[str] = set(event['hosts'])
+            public: bool = event['public']
         except CosmosResourceNotFoundError:
+            assert type(public) == bool
             old_hosts: set[str] = set()
         added_hosts = new_hosts.difference(old_hosts)
         removed_hosts = old_hosts.difference(new_hosts)
-        # add the added hosts
-        for host in added_hosts:
-            add_event_to_user(host, event_id, 'host')
+        # Remove the event from the removed hosts
         for host in removed_hosts:
             remove_event_from_user(host, event_id, 'host')
-
+        # Add the event to the added hosts
+        for host in added_hosts:
+            add_event_to_user(host, create_user_event_record(event_id, public), 'host')
         
     if form is not None:
         update['form'] = form
