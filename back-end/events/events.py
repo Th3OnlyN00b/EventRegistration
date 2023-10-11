@@ -9,8 +9,9 @@
 # Owner: string
 # Hosts: list[string]
 # form: JSON)
-
+from typing import Any
 import azure.functions as func
+import logging
 import random
 import json
 import constants
@@ -26,8 +27,8 @@ def create_event(req: func.HttpRequest) -> func.HttpResponse:
 
     Parameters
     ------------ 
-    req `func.HttpRequest`: The request needing token validation. Required fields are `["title", "form"]`.
-    Will optionally accept `["image", "description"]
+    req `func.HttpRequest`: The request needing token validation. Required fields are `["title", "form", "public"]`.
+    Will optionally accept `["image", "description"]`.
 
     Returns
     ------------
@@ -36,7 +37,7 @@ def create_event(req: func.HttpRequest) -> func.HttpResponse:
     """
 
     # First we'll validate the input
-    validation = validate_contains_required_fields(req, set(['title', 'form']), authenticate=True)
+    validation = validate_contains_required_fields(req, set(['title', 'form', 'public']), authenticate=True)
     if type(validation) == func.HttpResponse:
         return validation
     # For static type checking
@@ -58,28 +59,14 @@ def create_event(req: func.HttpRequest) -> func.HttpResponse:
             event_id = ''.join(random.choices(constants.ALPHABET, k=10))
     if i == constants.MAX_RANDOM_RETRIES_EVENTS:
         # We must have maxed out retries
-        print("Max retries reached. This is unlikely, and probably means something is wrong. Unless you have a ton of customers so if that's the case, well done to you!")
+        logging.error("Max retries reached. This is unlikely, and probably means something is wrong. Unless you have a ton of customers so if that's the case, well done to you!")
         return func.HttpResponse(json.dumps({'code': 'nocreate', 'message': 'Max retries on attempt to generate unique code reached.'}), status_code=500)
-    # Then we need to add this event to the owner's list
-    events_by_user_table = get_db_container_client('auth', 'events_by_user') # TODO: Change this out of auth once we leave free tier
-    # Try to get the old entry for the user
-    try:
-        old_item = events_by_user_table.read_item(user_id, user_id)
-    except CosmosResourceNotFoundError as e:
-        # Generate a dummy old item
-        old_item = {'id': user_id, 'own': [], 'host': [], 'attended': []}
-    # Add this event to the user's owned list
-    old_item['own'].push({'id': event_id, 'public': req_json['event']['public']})
-    try:
-        events_by_user_table.upsert_item(old_item)
-    except CosmosHttpResponseError as e:
-        # To avoid conflicts in state, attempt to delete the event from the events table
-        events_table.delete_item(event_id, event_id)
-        return func.HttpResponse(json.dumps({'code': 'nocreate', 'message': 'Cosmos was unable to create this event'}), status_code=500)
     # Need to update the event with the other data
     description = req_json['description'] if 'description' in req_json else None
     form = req_json['form']
-    if type(error := update_event(event_id, title=title, description=description, form=form)) == func.HttpResponse:
+    public = req_json['public']
+    image = req_json['image'] if 'image' in req_json else None
+    if type(error := update_event(event_id, title=title, description=description, new_owner=user_id, form=form, image=image, public=public, current_owner=None)) == func.HttpResponse:
         return error
     # At this point we have created the event and assigned it's owner and everything is recorded in the database. We're done.
     return func.HttpResponse(json.dumps({'code': 'success', 'message': 'Event created successfully!', 'event_id': event_id}), status_code=200)

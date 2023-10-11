@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 import azure.functions as func
+import logging
 from azure.storage.blob import BlobServiceClient
 if TYPE_CHECKING: # Neat feature. Will evaluate to false during runtime, always, but allows for using these imports for type hints
     from azure.storage.blob import BlobClient
@@ -62,10 +63,10 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], a
     """
     from auth.auth_utils import verify_token
     if req.method.lower() == "get":
-        print("this is a get method")
         req_json = dict(req.params)
     else:
         req_json: dict = req.get_json()
+    logging.info(req_json)
     # If needing to auth, do that first.
     if(authenticate):
         if('authorization' not in req.headers):

@@ -1,4 +1,5 @@
 from typing import Any
+import logging
 import azure.functions as func
 from utils import validate_contains_required_fields, get_db_container_client
 from twilio.rest import Client
@@ -52,9 +53,9 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
             to=phone,
             from_=constants.TEXTING_API['outgoing_number']
         )
-        print(f"Text message sent to {req_json['phone']}")
+        logging.info(f"Text message sent to {req_json['phone']}")
     except TwilioRestException as e:
-        print("Failed to send Twilio error. If you're seeing a lot of this message, it's likely that Twilio has gone down.")
+        logging.info("Failed to send Twilio error. If you're seeing a lot of this message, it's likely that Twilio has gone down.")
         return func.HttpResponse(json.dumps({'code': 'twilio', 'message': "Twilio has experienced a failure. Please try again."}), status_code=500)
     # Return `200` because successful.
     return func.HttpResponse(json.dumps({'code': 'success', 'message': "Code sent successfully"}), status_code=200)
@@ -94,7 +95,8 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     phone_code_table = get_db_container_client("auth", "phone_code")
     # Read validation code stored in DB
     try:
-        phone_code_table.read_item(req_json['phone'], req_json['code'])
+        # Given that the phone is the id and the code is the partition key, this will only work if the code is correct
+        phone_code_table.read_item(req_json['phone'], hash(req_json['code'], req_json['phone']))
     except CosmosHttpResponseError:
         # If the id is invalid, the code was deleted.
         return func.HttpResponse(json.dumps({'code': 'wrong', 'message': "Code timed out or is incorrect"}), status_code=403)
@@ -115,9 +117,15 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
 
 def verify_token(token_str: str) -> bool:
     # Fist extract the phone and token from the token string.
-    uuid, token = token_str.split('.')
-    # Next, get the client for the token table
-    session_tokens_table = get_db_container_client("auth", "session_tokens")
+    try: # TODO remove after bugfix
+        uuid, token = token_str.split('.')
+        # Next, get the client for the token table
+        session_tokens_table = get_db_container_client("auth", "session_tokens")
+    except Exception as e:
+        logging.info(token_str)
+        logging.info(e)
+        raise
+    
     try:
         # Try to update the 'last_used' field. Allows atomic database usage, and a single (cheap) operation.
         session_tokens_table.patch_item(item=uuid, partition_key=token, patch_operations=[{'op': 'replace', 'path': '/last_used', 'value': time.time()}])

@@ -2,11 +2,8 @@ import azure.functions as func
 import logging
 import os
 import json
-from azure.cosmos import CosmosClient
-from azure.cosmos.exceptions import CosmosHttpResponseError
 from auth import auth_utils
 from events import events
-from argon2 import PasswordHasher
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 app.register_functions(func.Blueprint()) 
@@ -55,7 +52,7 @@ def createEvent(req: func.HttpRequest) -> func.HttpResponse:
 
     Parameters
     ------------ 
-    req `func.HttpRequest`: The request. Required fields are `["event"]`
+    req `func.HttpRequest`: The request. Required fields are `["title", "form"]`. Will optionally accept `["image", "description"]`.
 
     Returns
     ------------

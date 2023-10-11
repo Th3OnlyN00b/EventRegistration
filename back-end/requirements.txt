@@ -8,4 +8,5 @@ azure-identity
 azure-storage-blob
 argon2-cffi
 requests
+Pillow
 twilio
