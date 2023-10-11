@@ -8,7 +8,7 @@ import logging
 import base64
 from constants import EVENT_IMAGES_BLOB_CONTAINER_NAME
 from utils import get_db_container_client, get_blob_client
-from ..user_utils import remove_event_from_user, add_event_to_user, create_user_event_record
+from user_utils import remove_event_from_user, add_event_to_user, create_user_event_record
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 from azure.storage.blob import ContentSettings
 import azure.functions as func
@@ -67,17 +67,18 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
             old_hosts: set[str] = set(event['hosts'])
             public: bool = event['public']
         except CosmosResourceNotFoundError:
+            # Must be creating a new event
             assert type(public) == bool
             old_hosts: set[str] = set()
+        # Figure out who has been added and who has been removed
         added_hosts = new_hosts.difference(old_hosts)
         removed_hosts = old_hosts.difference(new_hosts)
-        # Remove the event from the removed hosts
-        for host in removed_hosts:
-            remove_event_from_user(host, event_id, 'host')
         # Add the event to the added hosts
         for host in added_hosts:
             add_event_to_user(host, create_user_event_record(event_id, public), 'host')
-        
+        # Remove the event from the removed hosts
+        for host in removed_hosts:
+            remove_event_from_user(host, event_id, 'host')
     if form is not None:
         update['form'] = form
     if image is not None: # Images are a little more work

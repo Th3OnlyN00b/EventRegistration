@@ -1,8 +1,6 @@
 from utils import get_db_container_client
 from azure.cosmos.exceptions import CosmosResourceNotFoundError
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from typing import Literal
+from typing import Literal
 
 def remove_event_from_user(user_id: str, event_id: str, role: Literal["own", "host", "attend"]) -> dict[str, str|bool]:
     """
