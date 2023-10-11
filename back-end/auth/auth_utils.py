@@ -35,7 +35,8 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     assert type(validation) == tuple
     req_json, _ = validation
     # Generate validation code
-    code = str(secrets.randbelow(1000000)).zfill(6)
+    # code = str(secrets.randbelow(1000000)).zfill(6) # TODO: Uncomment this once it becomes time to really use SMS
+    code = "123456" # TODO: delete this once it becomes time to really use SMS
     phone = req_json["phone"]
     # Store validation code in DB with 90 second expiry
     code_table = get_db_container_client("auth", "phone_code")
@@ -46,17 +47,17 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     except CosmosHttpResponseError:
         # This may happen in a 1 in (literally) a million chance
         return func.HttpResponse(json.dumps({'code': 'duplicate', 'message': "Code already exists for this number! Please try again."}), status_code=500)
-    try:
-        twilio_client = Client(constants.TEXTING_API['account_sid'], constants.TEXTING_API['auth_token'])
-        message = twilio_client.messages.create(
-            body=f'{code} is your one-time verification code from {constants.PLATFORM_NAME}',
-            to=phone,
-            from_=constants.TEXTING_API['outgoing_number']
-        )
-        logging.info(f"Text message sent to {req_json['phone']}")
-    except TwilioRestException as e:
-        logging.info("Failed to send Twilio error. If you're seeing a lot of this message, it's likely that Twilio has gone down.")
-        return func.HttpResponse(json.dumps({'code': 'twilio', 'message': "Twilio has experienced a failure. Please try again."}), status_code=500)
+    # try: # TODO: Uncomment this once it becomes time to really use SMS
+    #     twilio_client = Client(constants.TEXTING_API['account_sid'], constants.TEXTING_API['auth_token'])
+    #     message = twilio_client.messages.create(
+    #         body=f'{code} is your one-time verification code from {constants.PLATFORM_NAME}',
+    #         to=phone,
+    #         from_=constants.TEXTING_API['outgoing_number']
+    #     )
+    #     logging.info(f"Text message sent to {req_json['phone']}")
+    # except TwilioRestException as e:
+    #     logging.info("Failed to send Twilio error. If you're seeing a lot of this message, it's likely that Twilio has gone down.")
+    #     return func.HttpResponse(json.dumps({'code': 'twilio', 'message': "Twilio has experienced a failure. Please try again."}), status_code=500)
     # Return `200` because successful.
     return func.HttpResponse(json.dumps({'code': 'success', 'message': "Code sent successfully"}), status_code=200)
 
