@@ -65,7 +65,10 @@ def validate_contains_required_fields(req: func.HttpRequest, fields: set[str], a
     if req.method.lower() == "get":
         req_json = dict(req.params)
     else:
-        req_json: dict = req.get_json()
+        try:
+            req_json: dict = req.get_json()
+        except ValueError:
+            return func.HttpResponse(f"{REJECT_MESSAGE} You didn't include a JSON body.", status_code=400)
     logging.info(req_json)
     # If needing to auth, do that first.
     if(authenticate):

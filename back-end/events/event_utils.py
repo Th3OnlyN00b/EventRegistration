@@ -14,7 +14,7 @@ from azure.storage.blob import ContentSettings
 import azure.functions as func
 
 
-def update_event(event_id: str, title: str|None = None, description: str|None = None, image: str|None = None, public: bool|None = None,
+def update_event(event_id: str, title: str|None = None, description: str|None = None, image: str|None = None, public: bool|None = None, # type: ignore
                  new_owner: str|None = None, hosts: list[str]|None=None, form: list|None=None, current_owner: str|None=None) -> func.HttpResponse|None:
     """
     Updates or creates an event in the `events` database, and modifies the `events_by_user` table and the `event-images` blob storage as needed.
@@ -41,6 +41,8 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
         'id': event_id,
     }
     # Update the fields if they're not None
+    if public is not None:
+        update['public'] = public
     if title is not None:
         update['title'] = title
     if description is not None:
