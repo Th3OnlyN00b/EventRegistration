@@ -1,4 +1,3 @@
-import React from "react";
 import { EventForm } from "../components";
 
 const CreateEvent = () => {
