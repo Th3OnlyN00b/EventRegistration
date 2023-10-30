@@ -1,20 +1,16 @@
 import React from "react";
 import { GrClose, GrAdd } from "react-icons/gr";
+import { QuestionOption } from "../models";
 
 type CheckboxesProps = {
-  options: string[];
-  onUpdateCheckboxOption: (value: string, index: number) => void;
-  onAddCheckboxOption: () => void;
-  onRemoveCheckboxOption: (index: number) => void;
+  options: QuestionOption[];
+  onUpdateOption: (value: string, index: number) => void;
+  onAddOption: () => void;
+  onRemoveOption: (index: number) => void;
 };
 
 const Checkboxes = (props: CheckboxesProps) => {
-  const {
-    options,
-    onRemoveCheckboxOption,
-    onUpdateCheckboxOption,
-    onAddCheckboxOption
-  } = props;
+  const { options, onRemoveOption, onUpdateOption, onAddOption } = props;
   return (
     <div className="px-6">
       {options.map((option, index) => (
@@ -27,16 +23,16 @@ const Checkboxes = (props: CheckboxesProps) => {
             <input
               type="text"
               onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                onUpdateCheckboxOption(e.currentTarget.value, index)
+                onUpdateOption(e.currentTarget.value, index)
               }
-              value={option}
+              value={option.label}
               className="w-full border-none bg-transparent px-1 text-sm leading-none focus:border-rose-500 focus:ring-0"
             />
           </div>
           {options.length > 1 && (
             <div>
               <button
-                onClick={() => onRemoveCheckboxOption(index)}
+                onClick={() => onRemoveOption(index)}
                 className="flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-xs text-gray-500 hover:bg-white"
               >
                 <GrClose />
@@ -48,7 +44,7 @@ const Checkboxes = (props: CheckboxesProps) => {
       <div>
         <div className="mt-2 flex items-center gap-3">
           <button
-            onClick={() => onAddCheckboxOption()}
+            onClick={() => onAddOption()}
             className="flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-xs text-gray-500 hover:bg-gray-100"
           >
             <GrAdd /> Add option
