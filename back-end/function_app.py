@@ -78,8 +78,8 @@ def updateEvent(req: func.HttpRequest) -> func.HttpResponse:
     """
     return events.update_event(req)
 
-@app.route(route="getEvent")
-def getEvent(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="getEventDetails")
+def getEventDetails(req: func.HttpRequest) -> func.HttpResponse:
     """
     Creates an event structure via the JSON passed in and stores it in the database.
         - If authenticated and the host, will return all event information and attendee info.

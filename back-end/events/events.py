@@ -110,7 +110,6 @@ def update_event(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(json.dumps({'code': 'success', 'message': 'Event updated successfully!'}), status_code=200)
 
-
 def get_all_events_by(req: func.HttpRequest, role: Role) -> func.HttpResponse:
     """
     Displays the most recent 100 events hosted by the user ID passed in.

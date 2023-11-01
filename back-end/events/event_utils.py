@@ -1,6 +1,4 @@
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from typing import Any
+from typing import Any
 import io
 from PIL import Image
 from user_utils import Role
