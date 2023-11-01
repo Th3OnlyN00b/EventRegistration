@@ -1,8 +1,8 @@
 import azure.functions as func
 import logging
-import os
 import json
 from auth import auth_utils
+from user_utils import Role
 from events import events
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -61,6 +61,23 @@ def createEvent(req: func.HttpRequest) -> func.HttpResponse:
     """
     return events.create_event(req)
 
+@app.route(route="updateEvent")
+def updateEvent(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Updates an event. First checks authentication to ensure identity of user creating event.\\
+    *Requires authentication*
+
+    Parameters
+    ------------ 
+    req `func.HttpRequest`: The request needing token validation. Required fields are `["event_id"]`.
+    Will optionally accept `["title", "public", "form", "image", "description", "hosts", "new_owner"]`.
+
+    Returns
+    ------------
+    A `func.HttpResponse`, denoting the success or failure of this token creation.
+    """
+    return events.update_event(req)
+
 @app.route(route="getEvent")
 def getEvent(req: func.HttpRequest) -> func.HttpResponse:
     """
@@ -98,7 +115,7 @@ def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
     ------------
     A `func.HttpResponse`, containing the list of events in the field `'events'`
     """
-    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
+    return events.get_all_events_by(req, Role.HOST)
 
 app.route(route="getAllPrivateEvents")
 def getAllPrivateEvents(req: func.HttpRequest) -> func.HttpResponse:

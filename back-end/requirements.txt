@@ -2,11 +2,11 @@
 # The Python Worker is managed by Azure Functions platform
 # Manually managing azure-functions-worker may cause unexpected issues
 
-azure-functions
-azure-cosmos
-azure-identity
-azure-storage-blob
-argon2-cffi
-requests
-Pillow
-twilio
+azure-functions # Required
+azure-cosmos==4.5.2b1 # For DB access
+azure-identity # To ensure we're signed in for azure things
+azure-storage-blob # To store images
+argon2-cffi # Also not sure.
+requests # Not sure exactly.
+Pillow # For image processing
+twilio # For SMS API

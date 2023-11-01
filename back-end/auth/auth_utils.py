@@ -2,16 +2,15 @@ from typing import Any
 import logging
 import azure.functions as func
 from utils import validate_contains_required_fields, get_db_container_client
+from user_utils import Role
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-import constants
+from user_utils import get_or_create_user
 import time
-import uuid as uuid_package
 import hashlib
 import secrets
 import json
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
-from azure.cosmos.partition_key import NonePartitionKeyValue
 
 def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     """
@@ -43,7 +42,7 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     # Time to live has already been set to 90 seconds, so we are good on that.
     try:
         # Note that we're hashing the code using the phone number as an interloped salt. This is to prevent any issues if this database is compromised.
-        code_table.create_item({'id': phone, 'code': hash(code, phone)})
+        code_table.create_item({'id': phone, 'code': __hash(code, phone)})
     except CosmosHttpResponseError:
         # This may happen in a 1 in (literally) a million chance
         return func.HttpResponse(json.dumps({'code': 'duplicate', 'message': "Code already exists for this number! Please try again."}), status_code=500)
@@ -58,7 +57,7 @@ def create_token_request(req: func.HttpRequest) -> func.HttpResponse:
     # except TwilioRestException as e:
     #     logging.info("Failed to send Twilio error. If you're seeing a lot of this message, it's likely that Twilio has gone down.")
     #     return func.HttpResponse(json.dumps({'code': 'twilio', 'message': "Twilio has experienced a failure. Please try again."}), status_code=500)
-    # Return `200` because successful.
+    # # Return `200` because successful.
     return func.HttpResponse(json.dumps({'code': 'success', 'message': "Code sent successfully"}), status_code=200)
 
 # create_token({'phone': "7816368946", 'code': '123456'})
@@ -84,20 +83,14 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     # For static type checking
     assert type(validation) == tuple
     req_json, _ = validation
-    # Get the user ID so we're storing the IDs instead of the phone #
-    id_table = get_db_container_client("auth", "ids") # TODO: Change this from the 'auth' database once we leave Azure free tier
-    try:
-        uuid = id_table.read_item(req_json['phone'], req_json['phone'])['uuid']
-    except CosmosHttpResponseError:
-        # If it doesn't exist yet, make it.
-        uuid = str(uuid_package.uuid4())
-        id_table.create_item({'id': req_json['phone'], 'uuid': uuid})
+    
+    uuid = get_or_create_user(req_json["phone"])
     # Connect to DB
     phone_code_table = get_db_container_client("auth", "phone_code")
     # Read validation code stored in DB
     try:
         # Given that the phone is the id and the code is the partition key, this will only work if the code is correct
-        phone_code_table.read_item(req_json['phone'], hash(req_json['code'], req_json['phone']))
+        phone_code_table.read_item(req_json['phone'], __hash(req_json['code'], req_json['phone']))
     except CosmosHttpResponseError:
         # If the id is invalid, the code was deleted.
         return func.HttpResponse(json.dumps({'code': 'wrong', 'message': "Code timed out or is incorrect"}), status_code=403)
@@ -126,7 +119,7 @@ def verify_token(token_str: str) -> bool:
         logging.info(token_str)
         logging.info(e)
         raise
-    
+    # Check to ensure validity
     try:
         # Try to update the 'last_used' field. Allows atomic database usage, and a single (cheap) operation.
         session_tokens_table.patch_item(item=uuid, partition_key=token, patch_operations=[{'op': 'replace', 'path': '/last_used', 'value': time.time()}])
@@ -138,7 +131,7 @@ def verify_token(token_str: str) -> bool:
 
 
 ########### HELPER FUNCITONS BELOW ##############
-def hash(code: str, phone: str) -> str:
+def __hash(code: str, phone: str) -> str:
     """
     Creates a secure sha256 hash from the code and phone number passed in. This prevents us from
     storing specific codes in raw form, and makes it much harder for an attacker to use any information
@@ -154,3 +147,18 @@ def hash(code: str, phone: str) -> str:
     A string representing the hex-code version of the sha256 hash. 
     """
     return hashlib.sha256(bytes(phone[:4] + code + phone[2:-1], encoding='utf-8')).hexdigest()
+
+########### HELPER EXCEPTIONS BELOW #############
+class NoPermissionException(Exception):
+    """
+    Raised when a requested action requires permissions the user does not have.
+
+    Attributes
+    -----------
+    requires `Role`: The minimum role required
+    """
+
+    def __init__(self, requires: Role, has: Role) -> None:
+        self.requires = requires
+        self.message = f"The requested action requires one of the following roles: {Role.roles_above_and_including(requires)} but has {has.name}"
+        super().__init__()
