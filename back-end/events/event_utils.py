@@ -4,10 +4,10 @@ from PIL import Image
 from user_utils import Role
 import json
 import logging
-from constants import EVENT_IMAGES_BLOB_CONTAINER_NAME
-from utils import get_db_container_client, get_blob_client
-from user_utils import remove_user_event, upsert_user_event, get_user_event
-from auth.auth_utils import NoPermissionException
+import constants
+from utils import get_db_container_client, get_blob_client, validate_contains_required_fields
+from user_utils import remove_user_event, upsert_user_event, get_user_event_role
+from auth.auth_utils import NoPermissionException, PrivateEventException
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 from azure.storage.blob import ContentSettings
 import azure.functions as func
@@ -41,7 +41,7 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
     }
     try:
         if current_owner is not None:
-            updater_role = get_user_event(current_owner, event_id)
+            updater_role = get_user_event_role(current_owner, event_id)
         else:
             updater_role = Role.OWNER
         # Update the fields if they're not None
@@ -82,7 +82,7 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
             image_format = ("gif" if "gif" in data_type else "jpeg")
             img.save(output_buffer, format=image_format, save_all=(True if image_format == "gif" else False))
             try:
-                blob_client = get_blob_client(EVENT_IMAGES_BLOB_CONTAINER_NAME, f"{event_id}.{image_format}") # Just gonna name the image the event ID
+                blob_client = get_blob_client(constants.EVENT_IMAGES_BLOB_CONTAINER_NAME, f"{event_id}.{image_format}") # Just gonna name the image the event ID
                 blob_client.upload_blob(output_buffer.getvalue(), content_settings=ContentSettings(content_type=f"image/{image_format}"))
                 # Add the image URL to the update dict
                 update['image'] = f"https://untitledeventplanner.blob.core.windows.net/event-images/{event_id}.{image_format}"
@@ -133,20 +133,65 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
         return func.HttpResponse(json.dumps({'code': 'no_details', 'message': 'Event update failed due to cosmos.'}), status_code=500)
     return None
 
-def get_event(event_id: str) -> dict[str, Any]:
+def get_all_events_by(requested_user, current_user, role: Role) -> func.HttpResponse|list[dict[str, Any]]:
+    """
+    Displays the most recent 100 events hosted by the user ID passed in.
+        - If same user, will return all public events, as well as private events that the requester has the given role or higher in.
+        - If not same user or unauthed, will show only publicly available events.
+
+    Parameters
+    ------------ 
+    requested_user `str`: The user whose events we want.\\
+    current_user `str`: The user requesting these events.\\
+    role `Role`: The role to get all events above. For example, if `Role.HOST` then all hosted and owned events will be returned.
+
+    Returns
+    ------------
+    A list of events in the field `'events'`
+    """
+    user_connections_table = get_db_container_client('auth', 'user_connections') # TODO: Change this out of auth once we leave free tier
+    try:
+        # Have to make a cross partition query, but only within one subpartition. This is still quite efficient.
+        items = user_connections_table.query_items(f'SELECT * FROM ec', partition_key=[requested_user])
+    except CosmosResourceNotFoundError as e:
+        # This user does not exist or has no events
+        return func.HttpResponse(json.dumps({'code': 'none', 'message': 'User has no events or does not exist!'}), status_code=200) # 200 because this is still correct functioning
+    # Get only events with the roles we care about
+    events_with_role = filter(lambda item: Role[item['role']] in Role.roles_above_and_including(role), items)
+    # Get a list of IDs so we can get the event details
+    event_ids = [event['event_id'] for event in events_with_role]
+    self_request = (requested_user == current_user) # Is this user looking to view their own events
+    event_details = get_top_events(event_ids, public_only=(not self_request))
+    # Get only the highlight details for each event here-- not the full event details.
+    event_details_trimmed = [{k: e[k] for k in constants.EVENT_THUMBNAIL_FIELDS} for e in event_details]
+    return event_details_trimmed
+
+def get_event(event_id: str, user_id: str|None) -> dict[str, Any]:
     """
     Gets the event details from CosmosDB.
 
     Parameters
     -----------
     event_id `str`: The id for the event to get information about.
+    user_id `str`: The id for the user to get information about, or none if looking for public info only.
 
     Returns
     -----------
     The event details
     """
     events_table = get_db_container_client('auth', 'events') # TODO: Change this out of auth once we leave free tier
-    return events_table.read_item(event_id, event_id)
+    event = events_table.read_item(event_id, event_id)
+    role = get_user_event_role(user_id, event_id)
+    if (role == Role.NONE):
+        # User is not invited-- check if public
+        if event['public']:
+            # Only return public fields actually present (for example, description is not required but is public)
+            event = {k: event[k] for k in constants.EVENT_PUBLICLY_VISIBLE_FIELDS.union(event.keys())}
+        else:
+            # Need to return a 404 event1 not found.
+            raise PrivateEventException()
+        
+    return {'event': event, 'user_role': role.value}
 
 def get_events(event_ids: list[str]) -> list[dict[str, Any]]:
     """

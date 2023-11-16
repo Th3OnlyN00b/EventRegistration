@@ -14,3 +14,11 @@ TEXTING_API = {
 }
 # Name of the azure storage blob container for event images
 EVENT_IMAGES_BLOB_CONTAINER_NAME = "event-images"
+# Which fields should be publicly visible
+EVENT_PUBLICLY_VISIBLE_FIELDS = {'title', 'description', 'datetime', 'id', 'public'}
+EVENT_THUMBNAIL_FIELDS = ['title', 'description', 'datetime', 'id', 'public']
+
+##### Validation vars #####
+TITLE_MIN_LENGTH = 2
+TITLE_MAX_LENGTH = 32
+DESCRIPTION_MAX_LENGTH = 1024

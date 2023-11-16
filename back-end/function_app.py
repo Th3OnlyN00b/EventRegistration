@@ -70,7 +70,7 @@ def updateEvent(req: func.HttpRequest) -> func.HttpResponse:
     Parameters
     ------------ 
     req `func.HttpRequest`: The request needing token validation. Required fields are `["event_id"]`.
-    Will optionally accept `["title", "public", "form", "image", "description", "hosts", "new_owner"]`.
+    Will optionally accept `["title", "public", "form", "datetime", "image", "description", "hosts", "new_owner"]`.
 
     Returns
     ------------
@@ -82,13 +82,13 @@ def updateEvent(req: func.HttpRequest) -> func.HttpResponse:
 def getEventDetails(req: func.HttpRequest) -> func.HttpResponse:
     """
     Creates an event structure via the JSON passed in and stores it in the database.
-        - If authenticated and the host, will return all event information and attendee info.
+        - If authenticated and a host, will return all event information and attendee info.
         - If authenticated and an attendee, will return all RSVP info. 
         - If authenticated and a private event
             - If uninvited, will return 403.
         - If unauthenticated, will show only publicly available info. 
-            - If a private event, will return 403. 
-            - If public, will return publicly available info like attendee count, name, and possibly location. <-- TODO
+            - If a private event, will return 401. 
+            - If public, will return publicly available info like attendee count, name, and possibly location.
 
     Parameters
     ------------ 
@@ -97,8 +97,9 @@ def getEventDetails(req: func.HttpRequest) -> func.HttpResponse:
     Returns
     ------------
     A `func.HttpResponse`, denoting the success or failure of this call. Will also contain the information about the event.
+    Upon success, in the form {role, event: {id, title, description, owner, public, []]}}
     """
-    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
+    return events.get_event_details(req)
 
 @app.route(route="getAllEventsHostedBy")
 def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
@@ -115,11 +116,24 @@ def getAllHostedBy(req: func.HttpRequest) -> func.HttpResponse:
     ------------
     A `func.HttpResponse`, containing the list of events in the field `'events'`
     """
-    return events.get_all_events_by(req, Role.HOST)
+    return events.get_events_by_user(req, Role.HOST)
 
-app.route(route="getAllPrivateEvents")
-def getAllPrivateEvents(req: func.HttpRequest) -> func.HttpResponse:
-    return func.HttpResponse(json.dumps({'code': 'NYI', 'message': "Not yet implemented"}), status_code=501) # TODO
+@app.route(route="getMyEvents")
+def getMyEvents(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Displays the most recent 100 events hosted by the user ID passed in.
+        - If authenticated will return all public events, as well as private events that the requester has been invited to.
+        - If unauthenticated, will show only publicly available events.
+
+    Parameters
+    ------------ 
+    req `func.HttpRequest`: The request.
+
+    Returns
+    ------------
+    A `func.HttpResponse`, containing the list of events in the field `'events'`
+    """
+    return events.get_my_events(req, Role.INVITED)
 
 @app.route(route="getAllEvents")
 def getAllEvents(req: func.HttpRequest) -> func.HttpResponse:

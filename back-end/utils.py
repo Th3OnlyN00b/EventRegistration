@@ -11,6 +11,7 @@ if TYPE_CHECKING: # Neat feature. Will evaluate to false during runtime, always,
     from typing import Any
     from azure.cosmos import ContainerProxy
 from azure.cosmos import CosmosClient
+import constants
 import os
 import io
 
@@ -106,6 +107,18 @@ def validate_contains_required_fields(req: func.HttpRequest, required_fields: se
     if ("name" in fields) and ("name" in req_json.keys()):
         if len(req_json["name"]) < 1:
             return func.HttpResponse(f"{REJECT_MESSAGE} That's not even a real name.", status_code=400)
+    # public should be a boolean
+    if ("public" in fields) and ("public" in req_json.keys()):
+        if type(req_json["public"]) == bool:
+            return func.HttpResponse(f"{REJECT_MESSAGE} Public has to be a boolean.", status_code=400)
+    # Titles need to be reasonable
+    if ("title" in fields) and ("title" in req_json.keys()):
+        if len(req_json["title"]) < constants.TITLE_MIN_LENGTH:
+            return func.HttpResponse(f"{REJECT_MESSAGE} Titles need to be at least {constants.TITLE_MIN_LENGTH} characters long.", status_code=400)
+        req_json['title'] = req_json['title'][:constants.TITLE_MAX_LENGTH]
+    # Descriptions can't be too long
+    if ("description" in fields) and ("description" in req_json.keys()):
+        req_json['description'] = req_json['description'][:constants.DESCRIPTION_MAX_LENGTH]
     # Datetimes should be parsable and reasonable
     if ("datetime" in fields) and ("datetime" in req_json.keys()):
         if type(req_json["datetime"]) != int:

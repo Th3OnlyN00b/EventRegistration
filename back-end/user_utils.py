@@ -2,11 +2,12 @@ from utils import get_db_container_client
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 import uuid as uuid_package
 from enum import Enum
+import json
 
 class Role(Enum):
     OWNER = "own"
     HOST = "host"
-    ATTENDEE = "attend"
+    RESPONDED = "rsvp"
     INVITED = "invited"
     NONE = "none"
     
@@ -55,6 +56,13 @@ class Role(Enum):
         """
         return [r.name for r in list(Role)[:list(Role).index(role)+1]]
 
+class UserNotFoundException(Exception):
+    """
+    Raised when an operation is requested on a user that does not exist
+    """
+    def __init__(self):
+        super().__init__()
+
 def remove_user_event(user_id: str, event_id: str) -> None:
     """
     Removes an event connection from a user to an event.
@@ -62,8 +70,7 @@ def remove_user_event(user_id: str, event_id: str) -> None:
     Parameters
     -----------
     user_id `str`: The id of the user to remove this event from.\\
-    event_id `str`: The id of the event to remove from this user.\\
-    role `str`: Must be either `"own"`, `"host"`, or `"attend"`. Represents the role this user has in this event.
+    event_id `str`: The id of the event to remove from this user.
     """
     event_connections = get_db_container_client('auth', 'event_connections') # TODO: Change this out of auth once we leave free tier
     user_connections = get_db_container_client('auth', 'user_connections') # TODO: Change this out of auth once we leave free tier
@@ -96,7 +103,7 @@ def upsert_user_event(user_id: str, event_id: str, role: Role) -> None:
         role=role.name
     ))
 
-def get_user_event(user_id: str, event_id: str) -> Role:
+def get_user_event_role(user_id: str|None, event_id: str) -> Role:
     """
     Gets an event connection from a user to an event and returns that user's Role.
 
@@ -110,8 +117,10 @@ def get_user_event(user_id: str, event_id: str) -> Role:
     The role this user_id has in this event 
     """
     event_connections = get_db_container_client('auth', 'event_connections') # TODO: Change this out of auth once we leave free tier
+    if user_id is None:
+        return Role.NONE
     try:
-        return Role[event_connections.read_item(user_id, partition_key=[event_id, user_id])['role']]
+        return Role[event_connections.read_item(event_id, partition_key=[event_id, user_id])['role']]
     except CosmosResourceNotFoundError:
         return Role.NONE
 
@@ -135,3 +144,46 @@ def get_or_create_user(phone: str) -> str:
         uuid = str(uuid_package.uuid4())
         id_table.create_item({'id': phone, 'uuid': uuid})
     return uuid
+
+def get_user_profile(id: str) -> dict[str, str]:
+    """
+    Gets a user's profile based on the UUID passed in
+
+    Parameters
+    -----------
+    id `str`: The UUID for the user.
+
+    Returns
+    -----------
+    A dict containing the user's profile information.
+    """
+    users_table = get_db_container_client("auth", "user_info") # TODO: Change this from the 'auth' database once we leave Azure free tier
+    try:
+        profile = users_table.read_item(id, id)
+    except CosmosHttpResponseError:
+        raise UserNotFoundException()
+    return profile
+
+def get_user_profiles(ids: list[str]) -> dict[str, dict[str, str]]:
+    """
+    Gets the users' profile based on the UUIDs passed in
+
+    Parameters
+    -----------
+    ids `list[str]`: The UUIDs for the users.
+
+    Returns
+    -----------
+    A dict of dicts containing the user's profile information, mapped by id.
+    NOTE: Any non-existent users will not be included. If no users are valid, will return an empty list.
+    """
+    users_table = get_db_container_client("auth", "user_info") # TODO: Change this from the 'auth' database once we leave Azure free tier
+    try:
+        # Note that the tablename here is meaningless, I just chose something that makes sense
+        profiles = list(users_table.query_items(
+            f"SELECT * FROM users WHERE ARRAY_CONTAINS({json.dumps(ids)}, users.id)",
+            enable_cross_partition_query=True # Only for the ids passed in, still fast.
+        ))
+    except CosmosHttpResponseError:
+        raise
+    return {profile['id']: profile for profile in profiles}

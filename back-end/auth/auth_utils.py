@@ -83,7 +83,6 @@ def create_token(req: func.HttpRequest) -> func.HttpResponse:
     # For static type checking
     assert type(validation) == tuple
     req_json, _ = validation
-    
     uuid = get_or_create_user(req_json["phone"])
     # Connect to DB
     phone_code_table = get_db_container_client("auth", "phone_code")
@@ -161,4 +160,13 @@ class NoPermissionException(Exception):
     def __init__(self, requires: Role, has: Role) -> None:
         self.requires = requires
         self.message = f"The requested action requires one of the following roles: {Role.roles_above_and_including(requires)} but has {has.name}"
+        super().__init__()
+
+class PrivateEventException(Exception):
+    """
+    Raised when information about a private event the user was not invited to is requested
+    """
+
+    def __init__(self) -> None:
+        self.message = "This event is private and requires an invite."
         super().__init__()

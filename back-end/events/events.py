@@ -18,6 +18,7 @@ import constants
 from azure.cosmos.exceptions import CosmosHttpResponseError, CosmosResourceNotFoundError
 from utils import validate_contains_required_fields, get_db_container_client
 from user_utils import Role
+from auth.auth_utils import PrivateEventException
 import events.event_utils
 
 def create_event(req: func.HttpRequest) -> func.HttpResponse:
@@ -81,14 +82,19 @@ def update_event(req: func.HttpRequest) -> func.HttpResponse:
     Parameters
     ------------ 
     req `func.HttpRequest`: The request needing token validation. Required fields are `["event_id"]`.
-    Will optionally accept `["title", "public", "form", "image", "description", "hosts", "new_owner"]`.
+    Will optionally accept `["title", "public", "form", "datetime", "image", "description", "hosts", "new_owner"]`.
 
     Returns
     ------------
     A `func.HttpResponse`, denoting the success or failure of this token creation.
     """
     # First we'll validate the input
-    validation = validate_contains_required_fields(req, set(['event_id']), authenticate=True)
+    validation = validate_contains_required_fields(
+        req,
+        required_fields=set(['event_id']),
+        optional_fields={"title", "public", "form", "datetime", "image", "description", "hosts", "new_owner"}, 
+        authenticate=True
+    )
     if type(validation) == func.HttpResponse:
         return validation
     # For static type checking
@@ -110,7 +116,7 @@ def update_event(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(json.dumps({'code': 'success', 'message': 'Event updated successfully!'}), status_code=200)
 
-def get_all_events_by(req: func.HttpRequest, role: Role) -> func.HttpResponse:
+def get_events_by_user(req: func.HttpRequest, role: Role=Role.INVITED) -> func.HttpResponse:
     """
     Displays the most recent 100 events hosted by the user ID passed in.
         - If same user, will return all public events, as well as private events that the requester has the given role or higher in.
@@ -119,6 +125,7 @@ def get_all_events_by(req: func.HttpRequest, role: Role) -> func.HttpResponse:
     Parameters
     ------------ 
     req `func.HttpRequest`: The request. Required fields are `["user_id"]`
+    role `Role`: The role to get all events above. For example, if `Role.HOST` then all hosted and owned events will be returned
 
     Returns
     ------------
@@ -136,19 +143,68 @@ def get_all_events_by(req: func.HttpRequest, role: Role) -> func.HttpResponse:
     # For static type checking
     assert type(validation) == tuple
     req_json, user_id = validation # user_id will be `None` if no validation
-    user_connections_table = get_db_container_client('auth', 'user_connections') # TODO: Change this out of auth once we leave free tier
+    event_details_trimmed = events.event_utils.get_all_events_by(req_json['user_id'], user_id, role)
+    if type(event_details_trimmed) == func.HttpResponse:
+        return event_details_trimmed
+    assert type(event_details_trimmed) == list
+    return func.HttpResponse(json.dumps({'code': 'success', 'events': event_details_trimmed}), status_code=200)
+
+def get_my_events(req: func.HttpRequest, role: Role=Role.INVITED) -> func.HttpResponse:
+    """
+    Displays the most recent 100 events hosted by the user ID passed in.
+        - If same user, will return all public events, as well as private events that the requester has the given role or higher in.
+        - If not same user or unauthed, will show only publicly available events.
+
+    Parameters
+    ------------ 
+    req `func.HttpRequest`: The request. Required fields are `["user_id"]`
+    role `Role`: The role to get all events above. For example, if `Role.HOST` then all hosted and owned events will be returned
+
+    Returns
+    ------------
+    A `func.HttpResponse`, containing the list of events in the field `'events'`
+    """
+    # Check if authed
+    if type(validation := validate_contains_required_fields(req, authenticate=True)) == func.HttpResponse:
+        return validation
+    # For static type checking
+    assert type(validation) == tuple
+    req_json, user_id = validation # user_id will be `None` if no validation
+    event_details_trimmed = events.event_utils.get_all_events_by(req_json['user_id'], user_id, role)
+    if type(event_details_trimmed) == func.HttpResponse:
+        return event_details_trimmed
+    assert type(event_details_trimmed) == list
+    return func.HttpResponse(json.dumps({'code': 'success', 'events': event_details_trimmed}), status_code=200)
+
+def get_event_details(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Gets the event details. Returns publicly accessible fields if the user is not invited or there is no auth 
+
+    Parameters
+    ------------ 
+    req `func.HttpRequest`: The request. Required fields are `["event_id"]`
+
+    Returns
+    ------------
+    A `func.HttpResponse`, containing the details of the event, or an error message if the event does not exist.
+    """
+    # First we'll validate the input
+    validation = validate_contains_required_fields(req, set(['event_id']), authenticate=False)
+    # Check if it's an authed call
+    if type(v := validate_contains_required_fields(req, set(['event_id']), authenticate=True)) == func.HttpResponse:
+        # Nah, it's just completely invalid
+        return v
+    else:
+        # It's valid and authed
+        validation = v
+    # For static type checking
+    assert type(validation) == tuple
+    req_json, user_id = validation # user_id will be `None` if no validation
+    event_id = req_json['event_id']
     try:
-        # Have to make a cross partition query, but only within one subpartition. This is still quite efficient.
-        items = user_connections_table.query_items(f'SELECT * FROM ec', partition_key=[req_json['user_id']])
-    except CosmosResourceNotFoundError as e:
-        # This user does not exist or has no events
-        return func.HttpResponse(json.dumps({'code': 'none', 'message': 'User has no events or does not exist!'}), status_code=200) # 200 because this is still correct functioning
-    # Get only events with the roles we care about
-    events_with_role = filter(lambda item: Role[item['role']] in Role.roles_above_and_including(role), items)
-    # Get a list of IDs so we can get the event details
-    event_ids = [event['event_id'] for event in events_with_role]
-    self_request = (req_json['user_id'] == user_id) # Is this user looking to view their own events
-    event_details = events.event_utils.get_top_events(event_ids, public_only=(not self_request))
-    # Get only the highlight details for each event here-- not the full event details.
-    event_details_trimmed = [{k: e[k] for k in ['title', 'description', 'datetime', 'id', 'public']} for e in event_details]
-    return func.HttpResponse(json.dumps(event_details_trimmed), status_code=200)
+        return func.HttpResponse(json.dumps(events.event_utils.get_event(event_id, user_id)), status_code=200)
+    except CosmosResourceNotFoundError:
+        return func.HttpResponse(json.dumps({'code': 'noevent', 'message': 'Event specified does not exist'}), status_code=404)
+    except PrivateEventException:
+        return func.HttpResponse(json.dumps({'code': 'noevent', 'message': 'Event specified is private and requires an invite'}), status_code=(403 if user_id is not None else 401))
+    
