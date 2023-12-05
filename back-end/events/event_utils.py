@@ -133,7 +133,7 @@ def update_event(event_id: str, title: str|None = None, description: str|None = 
         return func.HttpResponse(json.dumps({'code': 'no_details', 'message': 'Event update failed due to cosmos.'}), status_code=500)
     return None
 
-def get_all_events_by(requested_user, current_user, role: Role) -> func.HttpResponse|list[dict[str, Any]]:
+def get_all_events_by(requested_user: str, current_user: str|None, role: Role) -> func.HttpResponse|list[dict[str, Any]]:
     """
     Displays the most recent 100 events hosted by the user ID passed in.
         - If same user, will return all public events, as well as private events that the requester has the given role or higher in.
@@ -142,7 +142,7 @@ def get_all_events_by(requested_user, current_user, role: Role) -> func.HttpResp
     Parameters
     ------------ 
     requested_user `str`: The user whose events we want.\\
-    current_user `str`: The user requesting these events.\\
+    current_user `str|None`: The user requesting these events.\\
     role `Role`: The role to get all events above. For example, if `Role.HOST` then all hosted and owned events will be returned.
 
     Returns
@@ -153,7 +153,7 @@ def get_all_events_by(requested_user, current_user, role: Role) -> func.HttpResp
     try:
         # Have to make a cross partition query, but only within one subpartition. This is still quite efficient.
         items = user_connections_table.query_items(f'SELECT * FROM ec', partition_key=[requested_user])
-    except CosmosResourceNotFoundError as e:
+    except CosmosResourceNotFoundError:
         # This user does not exist or has no events
         return func.HttpResponse(json.dumps({'code': 'none', 'message': 'User has no events or does not exist!'}), status_code=200) # 200 because this is still correct functioning
     # Get only events with the roles we care about
